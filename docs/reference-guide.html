@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genesis 2 — Reference Guide | Cascade MoE Neural Network</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2333;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --accent: #58a6ff;
+  --green: #3fb950;
+  --purple: #bc8cff;
+  --orange: #f0883e;
+  --red: #f85149;
+  --cyan: #39d2c0;
+  --yellow: #e3b341;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,-apple-system,sans-serif; line-height:1.6; }
+a { color:var(--accent); text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+/* Header */
+.header { background:linear-gradient(135deg,#0d1117 0%,#1a1040 50%,#0d1117 100%); padding:40px 20px; text-align:center; border-bottom:2px solid var(--purple); }
+.header h1 { font-size:2.5em; background:linear-gradient(90deg,var(--cyan),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.header p { color:var(--text2); font-size:1.1em; margin-top:8px; }
+
+/* Product Tabs */
+.tabs { display:flex; justify-content:center; gap:4px; padding:20px; background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; flex-wrap:wrap; }
+.tab { padding:12px 24px; border:1px solid var(--border); border-radius:8px; cursor:pointer; font-size:0.95em; transition:all .3s; background:var(--bg); }
+.tab:hover { border-color:var(--accent); }
+.tab.active { background:var(--accent); color:#000; border-color:var(--accent); font-weight:600; }
+.tab .price { display:block; font-size:0.8em; opacity:0.7; }
+
+/* Content */
+.content { max-width:1200px; margin:0 auto; padding:20px; }
+.product-section { display:none; }
+.product-section.active { display:block; }
+
+/* Cards */
+.card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px; margin:20px 0; }
+.card h2 { color:var(--cyan); font-size:1.4em; margin-bottom:12px; display:flex; align-items:center; gap:10px; }
+.card h3 { color:var(--purple); margin:16px 0 8px; }
+
+/* File cards */
+.file-card { border-left:3px solid var(--accent); }
+.file-card.core { border-left-color:var(--cyan); }
+.file-card.gen { border-left-color:var(--purple); }
+.file-card.web { border-left-color:var(--green); }
+.file-card.emb { border-left-color:var(--orange); }
+.file-card.util { border-left-color:var(--yellow); }
+
+/* Function entries */
+.func { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:16px; margin:10px 0; transition:border-color .3s; }
+.func:hover { border-color:var(--accent); }
+.func-sig { font-family:'JetBrains Mono','Fira Code',monospace; color:var(--green); font-size:0.9em; background:var(--surface2); padding:8px 12px; border-radius:6px; overflow-x:auto; }
+.func-desc { margin-top:8px; color:var(--text); }
+.func-mod { margin-top:8px; padding:8px 12px; background:rgba(188,140,255,0.1); border-left:3px solid var(--purple); border-radius:0 6px 6px 0; font-size:0.9em; }
+.func-mod::before { content:"Experiment: "; color:var(--purple); font-weight:600; }
+.line-num { color:var(--text2); font-size:0.85em; }
+
+/* Tier badge */
+.tier { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.75em; font-weight:600; margin-left:8px; }
+.tier.academic { background:rgba(57,210,192,0.2); color:var(--cyan); }
+.tier.professional { background:rgba(188,140,255,0.2); color:var(--purple); }
+.tier.enterprise { background:rgba(240,136,62,0.2); color:var(--orange); }
+.tier.bundle { background:rgba(248,81,73,0.2); color:var(--red); }
+
+/* Animation Canvas */
+.anim-container { background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:20px; margin:20px 0; position:relative; overflow:hidden; min-height:400px; }
+canvas { display:block; margin:0 auto; }
+.anim-controls { display:flex; gap:10px; justify-content:center; margin-top:16px; flex-wrap:wrap; }
+.anim-btn { padding:8px 20px; border:1px solid var(--accent); border-radius:6px; background:transparent; color:var(--accent); cursor:pointer; font-size:0.9em; transition:all .3s; }
+.anim-btn:hover, .anim-btn.active { background:var(--accent); color:#000; }
+.anim-label { position:absolute; padding:6px 12px; background:rgba(0,0,0,0.85); border:1px solid var(--border); border-radius:6px; font-size:0.8em; pointer-events:none; z-index:10; font-family:monospace; }
+
+/* Data flow */
+.flow { display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:center; padding:20px; }
+.flow-step { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:12px 16px; text-align:center; min-width:120px; }
+.flow-step .fname { font-family:monospace; font-size:0.8em; color:var(--green); }
+.flow-arrow { color:var(--accent); font-size:1.5em; }
+
+/* Constants table */
+table { width:100%; border-collapse:collapse; margin:12px 0; }
+th { background:var(--surface2); color:var(--cyan); text-align:left; padding:10px 14px; font-size:0.9em; }
+td { padding:10px 14px; border-bottom:1px solid var(--border); font-size:0.9em; }
+td:first-child { font-family:monospace; color:var(--green); }
+td:nth-child(3) { font-family:monospace; color:var(--orange); }
+
+/* Files included */
+.files-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; margin:16px 0; }
+.file-item { display:flex; align-items:center; gap:10px; padding:12px; background:var(--bg); border:1px solid var(--border); border-radius:8px; }
+.file-item.included { border-color:var(--green); }
+.file-item.excluded { opacity:0.4; border-style:dashed; }
+.file-icon { font-size:1.5em; }
+.file-info .fname { font-family:monospace; font-size:0.9em; }
+.file-info .fdesc { font-size:0.8em; color:var(--text2); }
+
+/* Responsive */
+@media(max-width:768px) {
+  .header h1 { font-size:1.6em; }
+  .tabs { flex-direction:column; align-items:center; }
+  .tab { width:80%; text-align:center; }
+  .flow { flex-direction:column; }
+  .flow-arrow { transform:rotate(90deg); }
+}
+
+/* Scroll anchor offset */
+[id] { scroll-margin-top:80px; }
+
+/* TOC */
+.toc { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; margin:20px 0; }
+.toc h3 { color:var(--cyan); margin-bottom:12px; }
+.toc ul { list-style:none; }
+.toc li { padding:4px 0; }
+.toc li a { color:var(--text); font-size:0.95em; }
+.toc li a:hover { color:var(--accent); }
+.toc li a::before { content:"\25B8 "; color:var(--accent); }
+
+.highlight { color:var(--yellow); font-weight:600; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Genesis 2 — Reference Guide</h1>
+  <p>Cascade MoE Neural Network | Complete Function Reference & Architecture</p>
+  <p style="margin-top:12px;color:var(--purple)">Patent Pending | FIPS Russia 2026 | IPC G06N 3/04</p>
+</div>
+
+<div class="tabs" id="tabs">
+  <div class="tab active" onclick="showProduct('academic')">Academic<span class="price">$299</span></div>
+  <div class="tab" onclick="showProduct('professional')">Professional<span class="price">$1,499</span></div>
+  <div class="tab" onclick="showProduct('enterprise')">Enterprise<span class="price">$4,999</span></div>
+  <div class="tab" onclick="showProduct('bundle')">Source + Patent Bundle<span class="price">$5,000</span></div>
+</div>
+
+<div class="content">
+
+<!-- ===================== ANIMATION SECTION ===================== -->
+<div class="card" id="animation">
+  <h2>How It Works — Live Animation</h2>
+  <p style="color:var(--text2);margin-bottom:16px;">Watch how Genesis 2 creates neurons from data, builds expert routes, and performs cascade activation.</p>
+
+  <div class="anim-controls">
+    <button class="anim-btn active" onclick="startAnim('learn')">Learning</button>
+    <button class="anim-btn" onclick="startAnim('cascade')">Cascade Activation</button>
+    <button class="anim-btn" onclick="startAnim('generate')">Generation</button>
+    <button class="anim-btn" onclick="startAnim('embedding')">Hash Embedding</button>
+  </div>
+
+  <div class="anim-container">
+    <canvas id="animCanvas" width="1100" height="380"></canvas>
+  </div>
+  <div id="animDesc" style="text-align:center;color:var(--text2);margin-top:12px;min-height:40px;"></div>
+</div>
+
+<!-- ===================== DATA FLOW ===================== -->
+<div class="card">
+  <h2>Complete Data Flow</h2>
+  <div class="flow">
+    <div class="flow-step"><strong>Input Query</strong><div class="fname">"configure nginx"</div></div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step"><strong>Hash Embedding</strong><div class="fname">NeuronPoolEmbedding.encode()</div><div class="fname" style="color:var(--orange)">neuron_embedding.py:163</div></div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step"><strong>ANN Search</strong><div class="fname">cosine similarity</div><div class="fname" style="color:var(--orange)">genesis2_gen.py:370</div></div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step"><strong>Seed Expert</strong><div class="fname">+ input-match boost</div><div class="fname" style="color:var(--orange)">genesis2_gen.py:386</div></div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step"><strong>Cascade</strong><div class="fname">reverse index spread</div><div class="fname" style="color:var(--orange)">genesis2_gen.py:420</div></div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step"><strong>Composer</strong><div class="fname">nn.Sequential</div><div class="fname" style="color:var(--orange)">genesis2_gen.py:155</div></div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step"><strong>Response</strong><div class="fname">+ exec command</div><div class="fname" style="color:var(--orange)">genesis2_web.py:845</div></div>
+  </div>
+</div>
+
+<!-- ===================== PRODUCT: ACADEMIC ===================== -->
+<div class="product-section active" id="product-academic">
+
+<div class="card">
+  <h2>Academic License — What's Included</h2>
+  <div class="files-grid">
+    <div class="file-item included"><span class="file-icon">&#9881;</span><div class="file-info"><div class="fname">genesis2_core.py</div><div class="fdesc">Core architecture: neurons, experts, cascade (831 lines)</div></div></div>
+    <div class="file-item included"><span class="file-icon">&#10024;</span><div class="file-info"><div class="fname">genesis2_gen.py</div><div class="fdesc">Generation engine: composer, memory, boost (1053 lines)</div></div></div>
+    <div class="file-item included"><span class="file-icon">&#127760;</span><div class="file-info"><div class="fname">genesis2_web.py</div><div class="fdesc">Web UI + REST API + command executor (2068 lines)</div></div></div>
+    <div class="file-item included"><span class="file-icon">&#129504;</span><div class="file-info"><div class="fname">neuron_embedding.py</div><div class="fdesc">Hash embedding without external models (280 lines)</div></div></div>
+    <div class="file-item included"><span class="file-icon">&#128190;</span><div class="file-info"><div class="fname">genesis2_trained_full.pt</div><div class="fdesc">Pre-trained model: 10,800 experts (3.5 GB)</div></div></div>
+    <div class="file-item excluded"><span class="file-icon">&#128194;</span><div class="file-info"><div class="fname">datasets/ (30 files)</div><div class="fdesc">Professional+ only</div></div></div>
+    <div class="file-item excluded"><span class="file-icon">&#128220;</span><div class="file-info"><div class="fname">patent/</div><div class="fdesc">Enterprise+ only</div></div></div>
+    <div class="file-item excluded"><span class="file-icon">&#128295;</span><div class="file-info"><div class="fname">Utility scripts (4)</div><div class="fdesc">Bundle only</div></div></div>
+  </div>
+</div>
+
+<!-- genesis2_core.py -->
+<div class="card file-card core" id="core">
+  <h2>&#9881; genesis2_core.py<span class="tier academic">All Tiers</span></h2>
+  <p>The foundational architecture. Defines neurons, experts, cascade inference, and the 1-step learning algorithm.</p>
+
+  <h3>class EmbeddingEngine</h3>
+  <div class="func">
+    <div class="func-sig">def __init__(self, model_name="paraphrase-multilingual-MiniLM-L12-v2")</div>
+    <div class="line-num">Line 34</div>
+    <div class="func-desc">Loads SentenceTransformer model for initial embedding. Used during training phase only — production uses NeuronPoolEmbedding instead.</div>
+    <div class="func-mod">Change <code>model_name</code> to try other multilingual models (e.g., "all-MiniLM-L6-v2" for speed).</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def encode(self, text) -> tensor</div>
+    <div class="line-num">Line 42</div>
+    <div class="func-desc">Encodes single text to normalized 384-dim vector. Results are cached to avoid re-encoding.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def encode_batch(self, texts) -> tensor</div>
+    <div class="line-num">Line 47</div>
+    <div class="func-desc">Batch encoding with automatic cache misses handling. Returns tensor of shape (N, 384).</div>
+  </div>
+
+  <h3>class TrainableNeuron(nn.Module)</h3>
+  <div class="func">
+    <div class="func-sig">def __init__(self, dim, neuron_id, concept="")</div>
+    <div class="line-num">Line 64</div>
+    <div class="func-desc">Creates a single shared neuron. Architecture: <code>Linear(dim&rarr;dim) + LayerNorm + GELU + gate</code>. Xavier init with gain=0.1 for stability. Gate bias starts at 1.0 (open).</div>
+    <div class="func-mod">Change <code>gain=0.1</code> in xavier_uniform_ — higher values = faster learning but less stable. Change gate bias from 1.0 to control initial neuron contribution.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def forward(self, x) -> tensor</div>
+    <div class="line-num">Line 88</div>
+    <div class="func-desc">Residual transform: <code>x + sigmoid(gate(x)) * gelu(norm(linear(x)))</code>. The gate (sigmoid 0-1) controls how much this neuron contributes.</div>
+  </div>
+
+  <h3>class ExpertRoute</h3>
+  <div class="func">
+    <div class="func-sig">def __init__(self, eid, route, text, embedding, concepts, dim=384)</div>
+    <div class="line-num">Line 109</div>
+    <div class="func-desc">An expert = a route through the shared neuron pool. Stores: route (list of neuron IDs), text, embedding, concepts. Creates per-expert <code>micro_head</code> (Linear dim&rarr;dim, identity-initialized).</div>
+    <div class="func-mod">The micro_head is initialized as identity matrix — try different initializations to change expert specialization behavior.</div>
+  </div>
+
+  <h3>class CascadeMoETrainable(nn.Module)</h3>
+  <div class="func">
+    <div class="func-sig">def __init__(self, emb_engine, hidden_dim=384, output_dim=384)</div>
+    <div class="line-num">Line 142</div>
+    <div class="func-desc">Main model. Contains: neuron_pool (ModuleDict), experts (dict), reverse_index (neuron&rarr;experts), concept_map, OutputHead.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def _threshold(self) -> float</div>
+    <div class="line-num">Line 175</div>
+    <div class="func-desc">Adaptive neuron reuse threshold: <code>min(0.95, base + 0.025 * log2(n/5))</code>. Grows as pool expands — forces new neurons for novel concepts.</div>
+    <div class="func-mod">Change <code>base_threshold</code> (0.82): lower = more reuse, higher = more unique neurons. Change growth rate 0.025 and cap 0.95.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def _get_or_create_neuron(self, concept, concept_emb, context="")</div>
+    <div class="line-num">Line 184</div>
+    <div class="func-desc">Checks if a matching neuron exists (exact name first, then cosine similarity). If sim &ge; threshold AND usage &lt; cap: reuse existing. Otherwise: create new neuron. Returns (neuron_id, was_reused).</div>
+    <div class="func-mod">Change <code>neuron_cap</code> (80) to control when neurons get "full" and new ones are created.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def learn(self, text, target_text, concepts=None)</div>
+    <div class="line-num">Line 280</div>
+    <div class="func-desc"><span class="highlight">THE CORE LEARNING METHOD.</span> 1-step learning:
+      <ol style="margin:8px 0 0 20px;color:var(--text2)">
+        <li>Encode input and target text</li>
+        <li>Find/create neurons for each concept (reuse if similar enough)</li>
+        <li>Build route — ordered list of neuron IDs</li>
+        <li>Freeze ALL shared neurons, unfreeze ONLY exclusive (non-shared) ones</li>
+        <li>Create ExpertRoute with identity-initialized micro_head</li>
+        <li>Train: shared neurons get 1 gradient step, micro_head gets 10 steps</li>
+        <li>Loss = MSE + cosine_embedding_loss</li>
+      </ol>
+      Returns (expert_id, route, final_loss, reused_count).
+    </div>
+    <div class="func-mod">Change <code>n_steps=10</code> for micro-head training, <code>weight_decay=0.01</code>, gradient clip norm 1.0. More steps = better fit but slower learning.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def cascade_infer(self, query_text, top_k=5)</div>
+    <div class="line-num">Line 517</div>
+    <div class="func-desc"><span class="highlight">CASCADE INFERENCE.</span> Finds seed expert, spreads activation through shared neurons via reverse index. Scoring: <code>0.4*cascade + 0.3*output_sim + 0.2*input_sim + 0.1*text_bonus</code>.</div>
+    <div class="func-mod">All scoring weights are tunable. cascade_threshold (0.2) controls spread depth. <code>top_k</code> controls how many candidates to evaluate.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def save(self, path)</div>
+    <div class="line-num">Line 594</div>
+    <div class="func-desc">Saves entire model state: neuron pool, head, all experts, config, counters.</div>
+  </div>
+</div>
+
+<!-- genesis2_gen.py -->
+<div class="card file-card gen" id="gen">
+  <h2>&#10024; genesis2_gen.py<span class="tier academic">All Tiers</span></h2>
+  <p>Generation engine. Extends core with concept chains, composer network, dialogue memory, and exec commands.</p>
+
+  <h3>class ConceptNeuron(nn.Module)</h3>
+  <div class="func">
+    <div class="func-sig">def __init__(self, nid, dim, concept="")</div>
+    <div class="line-num">Line 48</div>
+    <div class="func-desc">Extended neuron: Linear + LayerNorm + GELU + weight_gate + episodic memory (max 30 responses). Gate bias starts at 0.5.</div>
+    <div class="func-mod">Change <code>max_responses=30</code> for episodic memory depth. Change gate bias to control initial neuron activation level.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def store_response(self, input_text, response_text, response_emb)</div>
+    <div class="line-num">Line 85</div>
+    <div class="func-desc">Stores (input, response, embedding) tuple in neuron's memory. FIFO eviction at max capacity. This is how neurons "remember" multiple responses.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def best_response(self, query_emb) -> (text, score)</div>
+    <div class="line-num">Line 91</div>
+    <div class="func-desc">Finds best matching stored response by cosine similarity with query embedding.</div>
+  </div>
+
+  <h3>class CascadeGenerator(nn.Module)</h3>
+  <div class="func">
+    <div class="func-sig">def __init__(self, emb_engine, dim=None)</div>
+    <div class="line-num">Line 118</div>
+    <div class="func-desc">Core generation model. Components:
+      <ul style="margin:8px 0 0 20px;color:var(--text2)">
+        <li><code>neurons</code> — shared neuron pool (ModuleDict)</li>
+        <li><code>routes</code> — expert routes with input/response/exec/micro_head</li>
+        <li><code>reverse</code> — neuron_key &rarr; set of expert_ids (cascade index)</li>
+        <li><code>memory_update</code> — Linear(3*dim &rarr; 2*dim) + GELU + LN + Linear(&rarr;dim)</li>
+        <li><code>route_query</code> — Linear(2*dim &rarr; dim) + GELU + Linear(&rarr;dim)</li>
+        <li><code>stop_gate</code> — Linear(2*dim &rarr; dim/2) + GELU + Linear(&rarr;1) + Sigmoid</li>
+        <li><code>composer</code> — Linear(dim) + GELU + LN + Linear(dim) [patent-critical]</li>
+      </ul>
+    </div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def learn(self, input_text, response_text, concepts=None, exec_cmd=None)</div>
+    <div class="line-num">Line 221</div>
+    <div class="func-desc">Learns input&rarr;response mapping with optional exec command. Creates micro_head per expert (identity init). Trains micro_head + composer together (10 steps, lr=0.005). <strong>All shared neurons stay FROZEN.</strong></div>
+    <div class="func-mod">Change composer lr (0.005), training steps (10), loss weights. The frozen-shared/trainable-unique split is the core of zero-forgetting guarantee.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def generate(self, query, top_k=5, depth=2, session_id=None)</div>
+    <div class="line-num">Line 318</div>
+    <div class="func-desc"><span class="highlight">THE MAIN GENERATION METHOD.</span> Full cascade activation pipeline:
+      <ol style="margin:8px 0 0 20px;color:var(--text2)">
+        <li>Extract concepts from query (<code>_auto_concepts</code>)</li>
+        <li>Seed selection: ANN cosine + concept coverage + input-match boost (+1.0 exact, +0.2 substring)</li>
+        <li>Cascade: spread through reverse index at configurable depth</li>
+        <li>Adaptive cascade threshold: <code>min(0.7, 0.25 + 0.05 * log2(routes/50))</code></li>
+        <li>Gate-weighted fragment collection from activated neurons</li>
+        <li>Composer transforms cascade state to response space</li>
+        <li>Expert scoring: <code>0.4*sem_query + 0.4*sem_composed + overlap + input-match</code></li>
+        <li>Micro-head refinement: <code>0.7*base_score + 0.3*micro_sim</code></li>
+        <li>Response composition from fragments (threshold 0.35)</li>
+        <li>Exec command selection (local-first, top-10 experts)</li>
+      </ol>
+      Returns: {response, fragments, concepts, score, neurons_activated, seed_expert, exec, thinking}.
+    </div>
+    <div class="func-mod">Key parameters: <code>top_k</code> (candidates), <code>depth</code> (cascade iterations), fragment threshold (0.35), all scoring weights. Try depth=3 for deeper associations.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def pretrain_route_generator(self, epochs=3, batch_size=32)</div>
+    <div class="line-num">Line 623</div>
+    <div class="func-desc">Pretrains memory_update, route_query, stop_gate, composer on all learned routes. Contrastive training: positive neurons score higher than negative by margin=0.5.</div>
+    <div class="func-mod">Change <code>epochs</code>, <code>batch_size</code>, lr=0.001, margin=0.5. More epochs = better routing but diminishing returns after 5.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def save_state(self, path)</div>
+    <div class="line-num">Line 766</div>
+    <div class="func-desc">Atomic save: writes to temp file, verifies size, renames. Saves in <strong>float16</strong> to reduce file size (~50% smaller). Includes neurons, routes, composer, all networks, counters.</div>
+    <div class="func-mod">The float16 save is critical for fitting the 3.5GB state in 16GB RAM. Change to float32 if you have 32GB+ RAM for slightly higher precision.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def load_state(self, path)</div>
+    <div class="line-num">Line 817</div>
+    <div class="func-desc">Loads state, converts float16 back to float32. Uses mmap for speed. Logs progress every 2000 items.</div>
+  </div>
+</div>
+
+<!-- neuron_embedding.py -->
+<div class="card file-card emb" id="emb">
+  <h2>&#129504; neuron_embedding.py<span class="tier academic">All Tiers</span></h2>
+  <p>Patent-critical: native hash embedding from neuron pool. No external models (no MiniLM, no BERT).</p>
+
+  <h3>class HashEncoder</h3>
+  <div class="func">
+    <div class="func-sig">def __init__(self, dim=384)</div>
+    <div class="line-num">Line 33</div>
+    <div class="func-desc">Creates deterministic random projection matrix (65536 buckets &times; dim), seed=42. Tracks IDF (inverse document frequency) for term weighting.</div>
+    <div class="func-mod">Change <code>dim</code> (384) for embedding size. Change <code>_num_buckets</code> (65536) — more buckets = fewer collisions but more memory.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def _tokenize(self, text) -> list</div>
+    <div class="line-num">Line 44</div>
+    <div class="func-desc">Splits text into: words + character trigrams (#xxx#) + bigrams (@xx@). Multi-level tokenization captures both semantics and character patterns.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def encode(self, text) -> tensor</div>
+    <div class="line-num">Line 72</div>
+    <div class="func-desc">Encodes text: tokenize &rarr; MD5 hash &rarr; IDF-weighted average of projection vectors &rarr; L2 normalize. Word weight=1.0, n-gram weight=0.3.</div>
+    <div class="func-mod">Change word/n-gram weights to prioritize semantic meaning (words) vs character patterns (n-grams).</div>
+  </div>
+
+  <h3>class NeuronPoolEmbedding</h3>
+  <div class="func">
+    <div class="func-sig">def __init__(self, neuron_pool=None, dim=384)</div>
+    <div class="line-num">Line 115</div>
+    <div class="func-desc">Full embedding engine. Uses HashEncoder for base encoding, enriches with neuron pool concepts. Cache max 10000 entries.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def encode(self, text) -> tensor</div>
+    <div class="line-num">Line 163</div>
+    <div class="func-desc"><span class="highlight">3-STEP ENCODING (patent-critical):</span>
+      <ol style="margin:8px 0 0 20px;color:var(--text2)">
+        <li>Hash encoding (raw projection)</li>
+        <li>Find matching neurons via inverted word index (F1 &gt; 0.15)</li>
+        <li>If no text match: fallback to cosine similarity (top-5, threshold &gt; 0.2)</li>
+        <li>Adaptive mixing: <code>neuron_mix = min(0.85, 0.2 + max_weight*0.5 + matched*0.01)</code></li>
+        <li>Result = normalize(raw_mix * raw + neuron_mix * neuron_context)</li>
+      </ol>
+    </div>
+    <div class="func-mod">F1 threshold (0.15), cosine fallback (0.2), mixing formula, softmax temperature (5.0) — all affect how much neuron knowledge enriches the embedding.</div>
+  </div>
+</div>
+
+<!-- genesis2_web.py -->
+<div class="card file-card web" id="web">
+  <h2>&#127760; genesis2_web.py<span class="tier academic">All Tiers</span></h2>
+  <p>Web interface, REST API, SSH agent, command executor, output analysis. The largest file (2068 lines).</p>
+
+  <h3>class CommandExecutor</h3>
+  <div class="func">
+    <div class="func-sig">def execute(self, cmd, timeout=15, auto_run=True)</div>
+    <div class="line-num">Line 47</div>
+    <div class="func-desc">Executes shell commands safely. Strips sudo on macOS. Blocks dangerous commands (rm, mkfs, dd, shutdown). Checks OS compatibility for Linux-only commands.</div>
+    <div class="func-mod">Modify <code>SAFE_COMMANDS</code>, <code>BLOCKED</code>, <code>LINUX_ONLY</code> sets to change security policy. Change <code>timeout</code> for long-running commands.</div>
+  </div>
+
+  <h3>class WiFiExpert — Main Knowledge Engine</h3>
+  <div class="func">
+    <div class="func-sig">def query(self, question, session_id='default')</div>
+    <div class="line-num">Line 845</div>
+    <div class="func-desc"><span class="highlight">MAIN QUERY ENTRY POINT.</span> Full pipeline:
+      <ol style="margin:8px 0 0 20px;color:var(--text2)">
+        <li>Check dialogue state machine (awaiting credentials/scan)</li>
+        <li>Decompose complex queries (split by "+", "and", commas)</li>
+        <li>For each sub-query: <code>gen.generate()</code> with cascade</li>
+        <li>Substitute params (IP, domain, port, MAC) into response</li>
+        <li>Execute command if provided</li>
+        <li>Analyze output (conntrack/ping/ARP analysis)</li>
+        <li>Agent loop: if empty result, try alternative approach</li>
+      </ol>
+      Returns: {question, answer, concepts, fragments, score, time_ms, commands, exec_results, neurons, thinking}.
+    </div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def _substitute_params(self, question, exec_cmd, result=None)</div>
+    <div class="line-num">Line 349</div>
+    <div class="func-desc">Smart parameter extraction: finds IPv4, IPv6, domains, ports, MACs in the question text and substitutes them into exec command templates. Builds real commands from placeholders.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def _analyze_output(self, stdout, question)</div>
+    <div class="line-num">Line 590</div>
+    <div class="func-desc">Comprehensive output analysis: conntrack traffic (80+ port identifiers), netstat (known IP ranges: Google, Telegram, Apple, Meta, AWS, Azure...), ping quality, ARP device detection.</div>
+    <div class="func-mod">Add new port mappings, IP ranges, or analysis patterns to extend detection capabilities.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def _find_remote_command(self, question, session)</div>
+    <div class="line-num">Line 159</div>
+    <div class="func-desc">Maps 17 keyword patterns to SSH commands: time, wifi config, clients, uptime, interfaces, firewall, dhcp, dns, logs, firmware, channel, network, backup, packages, ping, speed, restart, reboot.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">def learn(self, question, answer, concepts=None, exec_cmd=None)</div>
+    <div class="line-num">Line 1001</div>
+    <div class="func-desc">Learn new Q&A pair via API. Updates embedding index after learning. <strong>API fields: "question" and "answer" (NOT "input"/"response"!).</strong></div>
+  </div>
+
+  <h3>HTTP Server</h3>
+  <div class="func">
+    <div class="func-sig">POST /api/query — JSON query</div>
+    <div class="func-desc">Standard query: <code>{"question": "..."}</code> &rarr; <code>{"answer": "...", "commands": [...]}</code></div>
+  </div>
+  <div class="func">
+    <div class="func-sig">POST /api/query-stream — SSE streaming</div>
+    <div class="func-desc">Real-time streaming with thinking steps. Shows cascade activation progress.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">POST /api/learn — teach new fact</div>
+    <div class="func-desc"><code>{"question": "...", "answer": "...", "exec": "..."}</code> — learns in 130-550ms.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">POST /api/save — save model state</div>
+    <div class="func-desc">Saves to disk. Checks disk space (&gt;5GB required).</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">POST /api/pretrain — pretrain composer</div>
+    <div class="func-desc">Starts pretrain in background thread. Improves response quality.</div>
+  </div>
+</div>
+
+</div><!-- end product-academic -->
+
+<!-- ===================== PRODUCT: PROFESSIONAL ===================== -->
+<div class="product-section" id="product-professional">
+
+<div class="card">
+  <h2>Professional License — Everything in Academic, plus:</h2>
+  <div class="files-grid">
+    <div class="file-item included"><span class="file-icon">&#9881;</span><div class="file-info"><div class="fname">genesis2_core.py</div><div class="fdesc">Core architecture (831 lines)</div></div></div>
+    <div class="file-item included"><span class="file-icon">&#10024;</span><div class="file-info"><div class="fname">genesis2_gen.py</div><div class="fdesc">Generation engine (1053 lines)</div></div></div>
+    <div class="file-item included"><span class="file-icon">&#127760;</span><div class="file-info"><div class="fname">genesis2_web.py</div><div class="fdesc">Web UI + REST API (2068 lines)</div></div></div>
+    <div class="file-item included"><span class="file-icon">&#129504;</span><div class="file-info"><div class="fname">neuron_embedding.py</div><div class="fdesc">Hash embedding (280 lines)</div></div></div>
+    <div class="file-item included"><span class="file-icon">&#128190;</span><div class="file-info"><div class="fname">genesis2_trained_full.pt</div><div class="fdesc">Pre-trained model (3.5 GB)</div></div></div>
+    <div class="file-item included" style="border-color:var(--purple)"><span class="file-icon">&#128194;</span><div class="file-info"><div class="fname">datasets/ (30 JSONL files)</div><div class="fdesc">10,600+ training facts across 22 domains</div></div></div>
+    <div class="file-item excluded"><span class="file-icon">&#128220;</span><div class="file-info"><div class="fname">patent/</div><div class="fdesc">Enterprise+ only</div></div></div>
+    <div class="file-item excluded"><span class="file-icon">&#128295;</span><div class="file-info"><div class="fname">Utility scripts (4)</div><div class="fdesc">Bundle only</div></div></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>&#128194; Training Datasets — 30 Domains</h2>
+  <p>Each dataset is a JSONL file with format: <code>{"question": "...", "answer": "...", "concepts": [...], "exec": "..."}</code></p>
+  <table>
+    <tr><th>Dataset</th><th>Domain</th><th>Content</th></tr>
+    <tr><td>networking.jsonl</td><td>Network Engineering</td><td>Routing, switching, VLANs, subnets</td></tr>
+    <tr><td>cisco.jsonl</td><td>Cisco IOS</td><td>CLI commands, OSPF, BGP, ACLs</td></tr>
+    <tr><td>mikrotik.jsonl</td><td>MikroTik RouterOS</td><td>Firewall, NAT, DHCP, wireless</td></tr>
+    <tr><td>linux.jsonl</td><td>Linux Admin</td><td>Package management, services, filesystem</td></tr>
+    <tr><td>security.jsonl</td><td>Security</td><td>Hardening, fail2ban, firewalld, SELinux</td></tr>
+    <tr><td>docker_k8s.jsonl</td><td>Containers</td><td>Docker, Kubernetes, Helm, pods</td></tr>
+    <tr><td>monitoring.jsonl</td><td>Monitoring</td><td>Zabbix, Prometheus, Grafana</td></tr>
+    <tr><td>devops.jsonl</td><td>DevOps</td><td>Ansible, Terraform, CI/CD</td></tr>
+    <tr><td>databases.jsonl</td><td>Databases</td><td>PostgreSQL, MySQL, backup, replication</td></tr>
+    <tr><td>web_servers.jsonl</td><td>Web Servers</td><td>Nginx, Apache, reverse proxy, SSL</td></tr>
+    <tr><td>dns_dhcp.jsonl</td><td>DNS/DHCP</td><td>BIND, dnsmasq, ISC DHCP</td></tr>
+    <tr><td>vpn.jsonl</td><td>VPN</td><td>WireGuard, OpenVPN, IPsec</td></tr>
+    <tr><td>wifi.jsonl</td><td>WiFi</td><td>Configuration, troubleshooting, security</td></tr>
+    <tr><td>cloud.jsonl</td><td>Cloud</td><td>AWS, GCP, Azure basics</td></tr>
+    <tr><td>scada.jsonl</td><td>SCADA/ICS</td><td>Industrial protocols, PLC, HMI</td></tr>
+    <tr><td>voip.jsonl</td><td>VoIP</td><td>Asterisk, SIP, RTP</td></tr>
+    <tr><td>windows.jsonl</td><td>Windows</td><td>Active Directory, GPO, PowerShell</td></tr>
+    <tr><td>macos.jsonl</td><td>macOS</td><td>System preferences, brew, networksetup</td></tr>
+    <tr><td>virtualization.jsonl</td><td>Virtualization</td><td>KVM, Proxmox, VMware</td></tr>
+    <tr><td>automation.jsonl</td><td>Automation</td><td>Scripting, cron, systemd timers</td></tr>
+    <tr><td>backup.jsonl</td><td>Backup</td><td>rsync, borgbackup, snapshots</td></tr>
+    <tr><td>troubleshooting.jsonl</td><td>Troubleshooting</td><td>Diagnostics, log analysis, recovery</td></tr>
+    <tr><td>network_recon.jsonl</td><td>Recon</td><td>nmap, port scanning, discovery</td></tr>
+    <tr><td>traffic.jsonl</td><td>Traffic</td><td>tcpdump, Wireshark, packet analysis</td></tr>
+    <tr><td>scan_vpn_aware.jsonl</td><td>Scanning</td><td>VPN-aware network scanning</td></tr>
+    <tr><td>iot.jsonl</td><td>IoT</td><td>MQTT, CoAP, edge devices</td></tr>
+    <tr><td>russian_infra.jsonl</td><td>RU Infra</td><td>Russian software and infrastructure</td></tr>
+    <tr><td>general.jsonl</td><td>General</td><td>Common IT tasks and queries</td></tr>
+    <tr><td>exec_general.jsonl</td><td>Exec Commands</td><td>Pure executable command mappings</td></tr>
+    <tr><td>video_access.jsonl</td><td>Video/Access</td><td>IP cameras, access control, NVR</td></tr>
+  </table>
+  <p style="margin-top:12px;color:var(--text2)">With these datasets you can <strong>retrain the model from scratch</strong>, add your own domains, or modify existing knowledge.</p>
+</div>
+
+<div class="card">
+  <h2>How to Train from Datasets</h2>
+  <div class="func">
+    <div class="func-sig">python3 genesis2_web.py</div>
+    <div class="func-desc">On first run without a saved state, the server automatically loads all datasets from <code>datasets/</code> directory and trains the model. Each fact is learned in 130-550ms.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">POST /api/learn {"question":"...", "answer":"...", "exec":"..."}</div>
+    <div class="func-desc">Add new facts at runtime via API. The model learns instantly without restarting.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">POST /api/save</div>
+    <div class="func-desc">Save updated model to disk after adding new knowledge.</div>
+  </div>
+  <div class="func">
+    <div class="func-sig">POST /api/pretrain</div>
+    <div class="func-desc">After adding many facts, pretrain the composer and routing networks for better response quality.</div>
+  </div>
+</div>
+
+<p style="color:var(--text2);text-align:center;margin:20px 0;">All functions from Academic tier are also included. <a href="#" onclick="showProduct('academic');return false;">View Academic reference &uarr;</a></p>
+
+</div><!-- end product-professional -->
+
+<!-- ===================== PRODUCT: ENTERPRISE ===================== -->
+<div class="product-section" id="product-enterprise">
+
+<div class="card">
+  <h2>Enterprise License — Everything in Professional, plus:</h2>
+  <div class="files-grid">
+    <div class="file-item included"><span class="file-icon">&#9881;</span><div class="file-info"><div class="fname">All source code (4 files)</div><div class="fdesc">4,232 lines total</div></div></div>
+    <div class="file-item included"><span class="file-icon">&#128190;</span><div class="file-info"><div class="fname">genesis2_trained_full.pt</div><div class="fdesc">Pre-trained model (3.5 GB)</div></div></div>
+    <div class="file-item included"><span class="file-icon">&#128194;</span><div class="file-info"><div class="fname">datasets/ (30 JSONL files)</div><div class="fdesc">10,600+ training facts</div></div></div>
+    <div class="file-item included" style="border-color:var(--orange)"><span class="file-icon">&#128220;</span><div class="file-info"><div class="fname">patent/ (13 files)</div><div class="fdesc">Full patent documentation + drawings</div></div></div>
+    <div class="file-item included" style="border-color:var(--orange)"><span class="file-icon">&#128214;</span><div class="file-info"><div class="fname">Network_Automation_with_AI_FULL.pdf</div><div class="fdesc">132-page book</div></div></div>
+    <div class="file-item excluded"><span class="file-icon">&#128295;</span><div class="file-info"><div class="fname">Utility scripts (4)</div><div class="fdesc">Bundle only</div></div></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>&#128220; Patent Documentation</h2>
+  <p>Full patent filed at FIPS Russia, 31.05.2026 | IPC G06N 3/04 | 8 claims (2 independent + 6 dependent)</p>
+  <table>
+    <tr><th>File</th><th>Description</th></tr>
+    <tr><td>PATENT_APPLICATION_EN.md</td><td>Full patent text in English</td></tr>
+    <tr><td>PATENT_APPLICATION_RU.md</td><td>Full patent text in Russian (official)</td></tr>
+    <tr><td>PRIOR_ART_SEARCH_REPORT.md</td><td>Analysis of prior art and differentiation</td></tr>
+    <tr><td>CASCADE_MOE_DEPOSIT.md</td><td>RCIS blockchain deposit certificate</td></tr>
+    <tr><td colspan="2" style="color:var(--text2)"><strong>Technical Drawings (PNG + JPG, 300dpi):</strong></td></tr>
+    <tr><td>Fig.1 Architecture</td><td>Complete system architecture overview</td></tr>
+    <tr><td>Fig.2 Learning</td><td>1-step learning process with frozen/unfrozen neurons</td></tr>
+    <tr><td>Fig.3 Cascade Activation</td><td>How cascade spreads through reverse index</td></tr>
+    <tr><td>Fig.4 Hash Embedding</td><td>NeuronPoolEmbedding encoding pipeline</td></tr>
+    <tr><td colspan="2" style="color:var(--text2)"><strong>Official Documents (PDF):</strong></td></tr>
+    <tr><td>Description (RU)</td><td>Official utility model description</td></tr>
+    <tr><td>Claims (RU)</td><td>Patent claims formula</td></tr>
+    <tr><td>Abstract (RU)</td><td>Patent abstract</td></tr>
+  </table>
+</div>
+
+<p style="color:var(--text2);text-align:center;margin:20px 0;">All functions from Academic + Professional tiers included. <a href="#" onclick="showProduct('professional');return false;">View Professional reference &uarr;</a></p>
+
+</div><!-- end product-enterprise -->
+
+<!-- ===================== PRODUCT: BUNDLE ===================== -->
+<div class="product-section" id="product-bundle">
+
+<div class="card">
+  <h2>Source + Patent Bundle — Everything, plus:</h2>
+  <div class="files-grid">
+    <div class="file-item included"><span class="file-icon">&#9881;</span><div class="file-info"><div class="fname">All source code (4 files)</div><div class="fdesc">4,232 lines total</div></div></div>
+    <div class="file-item included"><span class="file-icon">&#128190;</span><div class="file-info"><div class="fname">genesis2_trained_full.pt</div><div class="fdesc">Pre-trained model (3.5 GB)</div></div></div>
+    <div class="file-item included"><span class="file-icon">&#128194;</span><div class="file-info"><div class="fname">datasets/ (30 JSONL files)</div><div class="fdesc">10,600+ training facts</div></div></div>
+    <div class="file-item included"><span class="file-icon">&#128220;</span><div class="file-info"><div class="fname">patent/ (15 files)</div><div class="fdesc">Patent + PRIORITY_EVIDENCE + STRATEGY</div></div></div>
+    <div class="file-item included"><span class="file-icon">&#128214;</span><div class="file-info"><div class="fname">Network_Automation_with_AI_FULL.pdf</div><div class="fdesc">132-page book</div></div></div>
+    <div class="file-item included" style="border-color:var(--red)"><span class="file-icon">&#128295;</span><div class="file-info"><div class="fname">clean_datasets.py</div><div class="fdesc">Dataset cleaning utility (240 lines)</div></div></div>
+    <div class="file-item included" style="border-color:var(--red)"><span class="file-icon">&#128295;</span><div class="file-info"><div class="fname">enrich_exec.py</div><div class="fdesc">Add exec commands to facts (260 lines)</div></div></div>
+    <div class="file-item included" style="border-color:var(--red)"><span class="file-icon">&#128295;</span><div class="file-info"><div class="fname">fix_dumb_exec.py</div><div class="fdesc">Environment-aware exec fixing (200 lines)</div></div></div>
+    <div class="file-item included" style="border-color:var(--red)"><span class="file-icon">&#128295;</span><div class="file-info"><div class="fname">convert_atomic.py</div><div class="fdesc">Dataset format converter (330 lines)</div></div></div>
+  </table>
+</div>
+
+<div class="card file-card util" id="utils">
+  <h2>&#128295; Utility Scripts<span class="tier bundle">Bundle Only</span></h2>
+  <p>Complete data pipeline for creating, cleaning, and enriching training datasets.</p>
+
+  <h3>clean_datasets.py (240 lines)</h3>
+  <div class="func">
+    <div class="func-sig">Dataset Cleaner</div>
+    <div class="func-desc">Removes duplicate entries ("details N" patterns), removes facts without exec from exec-heavy files, filters irrelevant general knowledge, merges fragmented entries. Use this to clean your own datasets before training.</div>
+    <div class="func-mod">Modify cleaning rules to match your domain. Add/remove patterns for your specific data sources.</div>
+  </div>
+
+  <h3>enrich_exec.py (260 lines)</h3>
+  <div class="func">
+    <div class="func-sig">Exec Enricher</div>
+    <div class="func-desc">Adds executable commands to theory-only facts. Maps concepts to known patterns: ping, dns, ssl, cpu, memory, network, storage, etc. Converts "how to check disk space" into actual <code>df -h</code> commands.</div>
+    <div class="func-mod">Add your own concept-to-command mappings for custom domains (e.g., cloud CLI commands, proprietary tools).</div>
+  </div>
+
+  <h3>fix_dumb_exec.py (200 lines)</h3>
+  <div class="func">
+    <div class="func-sig">Environment-Aware Fixer</div>
+    <div class="func-desc">Makes exec commands environment-aware: auto-detects network interface, checks VPN status, handles macOS vs Linux differences. Ensures commands actually work on the target system.</div>
+  </div>
+
+  <h3>convert_atomic.py (330 lines)</h3>
+  <div class="func">
+    <div class="func-sig">Format Converter</div>
+    <div class="func-desc">Converts datasets from various formats to atomic JSONL: <code>{question, answer, concepts, exec}</code>. Splits long answers into digestible chunks, deduplicates, drops irrelevant domains.</div>
+    <div class="func-mod">Add new format parsers for your data sources (CSV, SQL dumps, API responses, etc.).</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Bundle-Exclusive: Patent Strategy & Priority Evidence</h2>
+  <table>
+    <tr><th>File</th><th>Description</th></tr>
+    <tr><td>PRIORITY_EVIDENCE.md</td><td>RCIS blockchain certificate with hash proof — establishes priority date and authorship</td></tr>
+    <tr><td>PATENT_STRATEGY.md</td><td>Filing strategy, claim structure, international expansion plan, prior art positioning</td></tr>
+  </table>
+  <p style="margin-top:12px;color:var(--text2)">These documents are essential for white-label buyers who need to understand the IP landscape.</p>
+</div>
+
+<p style="color:var(--text2);text-align:center;margin:20px 0;">All functions from all tiers included. <a href="#" onclick="showProduct('enterprise');return false;">View Enterprise reference &uarr;</a></p>
+
+</div><!-- end product-bundle -->
+
+<!-- ===================== KEY CONSTANTS ===================== -->
+<div class="card" id="constants">
+  <h2>Key Constants & Thresholds</h2>
+  <p style="color:var(--text2);margin-bottom:12px;">These values control model behavior. All are modifiable in the source code.</p>
+  <table>
+    <tr><th>Constant</th><th>File : Line</th><th>Value</th><th>What It Controls</th></tr>
+    <tr><td>base_threshold</td><td>core:169</td><td>0.82</td><td>Cosine threshold for neuron reuse (lower=more sharing)</td></tr>
+    <tr><td>neuron_cap</td><td>core:167</td><td>80</td><td>Max times a neuron can be reused before splitting</td></tr>
+    <tr><td>lr_neuron</td><td>core:170</td><td>0.01</td><td>Learning rate for neuron weights</td></tr>
+    <tr><td>lr_head</td><td>core:171</td><td>0.005</td><td>Learning rate for micro-head</td></tr>
+    <tr><td>route_len</td><td>core:172</td><td>3</td><td>Number of neurons per expert route</td></tr>
+    <tr><td>micro_head steps</td><td>core:384</td><td>10</td><td>Training iterations per learn() call</td></tr>
+    <tr><td>threshold (gen)</td><td>gen:179</td><td>0.82</td><td>Neuron reuse threshold for generator</td></tr>
+    <tr><td>neuron_cap (gen)</td><td>gen:179</td><td>60</td><td>Generator neuron usage limit</td></tr>
+    <tr><td>compose_steps</td><td>gen:180</td><td>50</td><td>Composer training iterations</td></tr>
+    <tr><td>cascade depth</td><td>gen:318</td><td>2</td><td>Cascade spread iterations</td></tr>
+    <tr><td>fragment threshold</td><td>gen:526</td><td>0.35</td><td>Min weight to include response fragment</td></tr>
+    <tr><td>input-match exact</td><td>gen:386</td><td>+1.0</td><td>Exact input text match boost</td></tr>
+    <tr><td>input-match substr</td><td>gen:388</td><td>+0.2</td><td>Substring match boost</td></tr>
+    <tr><td>hash buckets</td><td>emb:37</td><td>65536</td><td>Projection matrix size for hash encoding</td></tr>
+    <tr><td>cache max</td><td>emb:119</td><td>10000</td><td>Embedding cache entries</td></tr>
+    <tr><td>F1 threshold</td><td>emb:204</td><td>0.15</td><td>Min quality for neuron-text match</td></tr>
+    <tr><td>neuron_mix max</td><td>emb:241</td><td>0.85</td><td>Max neuron contribution to embedding</td></tr>
+    <tr><td>softmax temp</td><td>emb:235</td><td>5.0</td><td>Temperature for neuron weight softmax</td></tr>
+    <tr><td>max_responses</td><td>gen:67</td><td>30</td><td>Episodic memory slots per neuron</td></tr>
+    <tr><td>session neurons</td><td>gen:604</td><td>10</td><td>Dialogue memory limit per session</td></tr>
+    <tr><td>pretrain margin</td><td>gen:719</td><td>0.5</td><td>Contrastive loss margin</td></tr>
+    <tr><td>exec timeout</td><td>web:47</td><td>15s</td><td>Command execution timeout</td></tr>
+    <tr><td>server port</td><td>web:2048</td><td>8765</td><td>Web UI port</td></tr>
+  </table>
+</div>
+
+<!-- ===================== PURCHASE LINKS ===================== -->
+<div class="card" style="text-align:center;border-color:var(--purple);">
+  <h2 style="justify-content:center;">Get Genesis 2</h2>
+  <p style="color:var(--text2);margin-bottom:20px;">Choose the edition that fits your needs:</p>
+  <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;">
+    <a href="https://avlarion.gumroad.com/l/lqtsbo" style="padding:16px 32px;background:var(--cyan);color:#000;border-radius:8px;font-weight:600;font-size:1.1em;">Academic — $299</a>
+    <a href="https://avlarion.gumroad.com/l/vrzudu" style="padding:16px 32px;background:var(--purple);color:#000;border-radius:8px;font-weight:600;font-size:1.1em;">Professional — $1,499</a>
+    <a href="https://avlarion.gumroad.com/l/atmon" style="padding:16px 32px;background:var(--orange);color:#000;border-radius:8px;font-weight:600;font-size:1.1em;">Enterprise — $4,999</a>
+    <a href="https://avlarion.gumroad.com/l/ymyagw" style="padding:16px 32px;background:var(--red);color:#fff;border-radius:8px;font-weight:600;font-size:1.1em;">Source + Patent — $5,000</a>
+  </div>
+  <p style="color:var(--text2);margin-top:16px;font-size:0.9em;">Contact: avlarionov@hotmail.com | GitHub: <a href="https://github.com/larionovavi-stack">larionovavi-stack</a></p>
+</div>
+
+</div><!-- end content -->
+
+<footer style="text-align:center;padding:40px;color:var(--text2);border-top:1px solid var(--border);margin-top:40px;">
+  <p>Genesis 2 — Cascade MoE Neural Network | Patent Pending FIPS Russia 2026</p>
+  <p>&copy; 2026 Larionov Alexander Viktorovich. All rights reserved.</p>
+</footer>
+
+<script>
+// Product tab switching
+function showProduct(tier) {
+  document.querySelectorAll('.product-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('product-' + tier).classList.add('active');
+  const tiers = ['academic','professional','enterprise','bundle'];
+  document.querySelectorAll('.tab')[tiers.indexOf(tier)].classList.add('active');
+}
+
+// ==================== ANIMATION ENGINE ====================
+const canvas = document.getElementById('animCanvas');
+const ctx = canvas.getContext('2d');
+let animFrame = null;
+let currentAnim = 'learn';
+let animTime = 0;
+
+const colors = {
+  bg: '#0d1117', neuron: '#39d2c0', neuronActive: '#58a6ff',
+  expert: '#bc8cff', route: '#3fb950', text: '#e6edf3',
+  dim: '#8b949e', orange: '#f0883e', red: '#f85149', yellow: '#e3b341'
+};
+
+// Neuron positions
+function makeNeurons(n, cx, cy, r) {
+  const arr = [];
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2 - Math.PI / 2;
+    arr.push({ x: cx + Math.cos(a) * r, y: cy + Math.sin(a) * r, id: 'n' + i, active: false, concept: '' });
+  }
+  return arr;
+}
+
+function drawNeuron(n, pulse) {
+  const r = n.active ? 14 + Math.sin(pulse) * 3 : 10;
+  const c = n.active ? colors.neuronActive : colors.neuron;
+  ctx.beginPath();
+  ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+  if (n.active) {
+    ctx.shadowColor = c;
+    ctx.shadowBlur = 15;
+  }
+  ctx.fillStyle = c;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = colors.bg;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  // Label
+  ctx.fillStyle = colors.text;
+  ctx.font = '10px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(n.id, n.x, n.y + 4);
+}
+
+function drawConnection(a, b, color, width, alpha) {
+  ctx.beginPath();
+  ctx.moveTo(a.x, a.y);
+  ctx.lineTo(b.x, b.y);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width || 1;
+  ctx.globalAlpha = alpha || 0.3;
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+}
+
+function drawLabel(x, y, text, color) {
+  ctx.fillStyle = color || colors.dim;
+  ctx.font = '12px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(text, x, y);
+}
+
+function drawCodeLabel(x, y, text) {
+  const m = ctx.measureText(text);
+  ctx.fillStyle = 'rgba(0,0,0,0.7)';
+  ctx.fillRect(x - m.width/2 - 6, y - 12, m.width + 12, 20);
+  ctx.strokeStyle = colors.route;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x - m.width/2 - 6, y - 12, m.width + 12, 20);
+  ctx.fillStyle = colors.route;
+  ctx.font = '11px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(text, x, y + 2);
+}
+
+function drawBox(x, y, w, h, label, color, filled) {
+  ctx.beginPath();
+  ctx.roundRect(x, y, w, h, 8);
+  if (filled) {
+    ctx.fillStyle = color + '33';
+    ctx.fill();
+  }
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.font = 'bold 13px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(label, x + w/2, y + h/2 + 5);
+}
+
+function drawArrow(x1, y1, x2, y2, color, progress) {
+  const dx = x2 - x1, dy = y2 - y1;
+  const px = x1 + dx * progress, py = y1 + dy * progress;
+  // Line
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(px, py);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  // Arrow head
+  if (progress > 0.9) {
+    const angle = Math.atan2(dy, dx);
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.lineTo(px - 10 * Math.cos(angle - 0.4), py - 10 * Math.sin(angle - 0.4));
+    ctx.lineTo(px - 10 * Math.cos(angle + 0.4), py - 10 * Math.sin(angle + 0.4));
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+}
+
+// ==================== ANIMATION: LEARNING ====================
+function animLearn(t) {
+  ctx.fillStyle = colors.bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const phase = (t % 600) / 600; // 0-1 cycle
+  const neurons = makeNeurons(12, 550, 190, 140);
+
+  // Phase labels
+  const phases = [
+    [0, 0.15, 'Step 1: Input Encoding'],
+    [0.15, 0.35, 'Step 2: Find/Create Neurons'],
+    [0.35, 0.55, 'Step 3: Build Route'],
+    [0.55, 0.75, 'Step 4: Freeze Shared, Train Unique'],
+    [0.75, 1.0, 'Step 5: Create Expert with Micro-head']
+  ];
+
+  let currentPhase = phases.find(p => phase >= p[0] && phase < p[1]);
+  if (!currentPhase) currentPhase = phases[4];
+
+  // Title
+  ctx.fillStyle = colors.yellow;
+  ctx.font = 'bold 16px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(currentPhase[2], 550, 30);
+
+  // Input box
+  drawBox(30, 60, 180, 40, '"configure nginx"', colors.accent, phase >= 0);
+
+  // Target box
+  drawBox(30, 120, 180, 40, '"nginx reverse proxy"', colors.route, phase >= 0);
+
+  // Encoding arrow
+  if (phase >= 0.05) {
+    const p = Math.min(1, (phase - 0.05) / 0.1);
+    drawArrow(210, 80, 350, 150, colors.accent, p);
+    if (p > 0.5) drawCodeLabel(280, 135, 'emb_engine.encode()');
+  }
+
+  // Draw neuron pool
+  drawLabel(550, 55, 'Shared Neuron Pool', colors.cyan);
+  drawCodeLabel(550, 355, 'neuron_pool (ModuleDict)');
+
+  // Connections between neurons
+  for (let i = 0; i < neurons.length; i++) {
+    for (let j = i + 1; j < neurons.length; j++) {
+      if (Math.random() > 0.7) drawConnection(neurons[i], neurons[j], colors.border || '#30363d', 1, 0.15);
+    }
+  }
+
+  // Activate some neurons based on phase
+  if (phase >= 0.15) {
+    neurons[2].active = true; neurons[2].concept = 'nginx';
+    if (phase >= 0.25) { neurons[7].active = true; neurons[7].concept = 'proxy'; }
+    if (phase >= 0.30) { neurons[11].active = true; neurons[11].concept = 'configure'; }
+  }
+
+  // Draw neurons
+  neurons.forEach(n => drawNeuron(n, t * 0.05));
+
+  // Show concepts
+  if (phase >= 0.15) {
+    drawLabel(neurons[2].x, neurons[2].y - 22, 'nginx', colors.orange);
+    drawCodeLabel(780, 100, '_get_or_create_neuron()');
+  }
+  if (phase >= 0.25) drawLabel(neurons[7].x, neurons[7].y - 22, 'proxy', colors.orange);
+  if (phase >= 0.30) drawLabel(neurons[11].x, neurons[11].y - 22, 'configure', colors.orange);
+
+  // Route lines
+  if (phase >= 0.35) {
+    const routeNeurons = [neurons[2], neurons[7], neurons[11]];
+    for (let i = 0; i < routeNeurons.length - 1; i++) {
+      drawConnection(routeNeurons[i], routeNeurons[i+1], colors.route, 3, 0.8);
+    }
+    drawLabel(550, 375, 'route = [n2, n7, n11]', colors.route);
+    drawCodeLabel(900, 200, 'route_len = 3');
+  }
+
+  // Freeze indicator
+  if (phase >= 0.55) {
+    neurons.forEach((n, i) => {
+      if (!n.active) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 16, 0, Math.PI * 2);
+        ctx.strokeStyle = colors.red;
+        ctx.lineWidth = 2;
+        ctx.setLineDash([3, 3]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    });
+    drawLabel(870, 260, 'FROZEN', colors.red);
+    drawLabel(870, 278, '(shared neurons)', colors.dim);
+    drawCodeLabel(900, 300, 'requires_grad = False');
+  }
+
+  // Expert box
+  if (phase >= 0.75) {
+    drawBox(830, 50, 220, 50, 'Expert #10806', colors.purple, true);
+    drawBox(830, 110, 220, 30, 'micro_head (identity init)', colors.purple, false);
+    drawCodeLabel(940, 160, 'ExpertRoute()');
+
+    // Arrow from route to expert
+    drawArrow(690, 190, 830, 75, colors.purple, Math.min(1, (phase - 0.75) / 0.1));
+  }
+}
+
+// ==================== ANIMATION: CASCADE ====================
+function animCascade(t) {
+  ctx.fillStyle = colors.bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const phase = (t % 500) / 500;
+  const neurons = makeNeurons(16, 450, 190, 150);
+
+  // Title
+  ctx.fillStyle = colors.yellow;
+  ctx.font = 'bold 16px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  const step = phase < 0.2 ? 'Query Encoding' : phase < 0.4 ? 'Seed Expert Found' : phase < 0.7 ? 'Cascade Spreading...' : 'Response Composed';
+  ctx.fillText('Cascade Activation: ' + step, 450, 30);
+
+  // Query
+  drawBox(30, 50, 160, 35, '"check disk"', colors.accent, true);
+
+  // Seed expert
+  if (phase >= 0.2) {
+    neurons[3].active = true;
+    neurons[8].active = true;
+    neurons[12].active = true;
+    drawConnection(neurons[3], neurons[8], colors.route, 3, 0.8);
+    drawConnection(neurons[8], neurons[12], colors.route, 3, 0.8);
+    drawLabel(neurons[3].x - 30, neurons[3].y - 25, 'seed', colors.yellow);
+    drawCodeLabel(170, 130, '_find_best_expert()');
+  }
+
+  // Cascade spread
+  if (phase >= 0.4) {
+    const spread = Math.min(1, (phase - 0.4) / 0.3);
+    // Reverse index activations
+    const cascadeTargets = [1, 5, 9, 14, 6, 10];
+    const maxActive = Math.floor(spread * cascadeTargets.length);
+    for (let i = 0; i < maxActive; i++) {
+      const idx = cascadeTargets[i];
+      neurons[idx].active = true;
+      // Draw cascade connection
+      const source = i < 3 ? neurons[3] : neurons[8];
+      drawConnection(source, neurons[idx], colors.neuronActive, 2, 0.5 + spread * 0.3);
+    }
+    drawCodeLabel(750, 100, 'reverse_index[n3] -> {e45, e102, e89}');
+    drawCodeLabel(750, 130, 'cascade threshold: 0.25 + 0.05*log2(n)');
+  }
+
+  // Draw all neurons
+  neurons.forEach(n => drawNeuron(n, t * 0.05));
+
+  // Response
+  if (phase >= 0.7) {
+    drawBox(750, 300, 280, 50, 'Response: "df -h" + exec', colors.route, true);
+    drawCodeLabel(890, 280, 'composer(cascade_state)');
+    drawArrow(600, 250, 750, 325, colors.route, Math.min(1, (phase - 0.7) / 0.15));
+  }
+}
+
+// ==================== ANIMATION: GENERATE ====================
+function animGenerate(t) {
+  ctx.fillStyle = colors.bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const phase = (t % 700) / 700;
+
+  ctx.fillStyle = colors.yellow;
+  ctx.font = 'bold 16px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Full Generation Pipeline', 550, 30);
+
+  const steps = [
+    { x: 50, label: 'Input', sub: '"configure\nnginx proxy"', color: colors.accent },
+    { x: 200, label: 'Embedding', sub: 'NeuronPool\nEmbedding', color: colors.orange },
+    { x: 350, label: 'ANN Search', sub: 'cosine sim\n+ boost', color: colors.neuronActive },
+    { x: 500, label: 'Seed Expert', sub: 'best match\n+ concepts', color: colors.purple },
+    { x: 650, label: 'Cascade', sub: 'reverse index\ndepth=2', color: colors.cyan },
+    { x: 800, label: 'Composer', sub: 'nn.Sequential\ntransform', color: colors.route },
+    { x: 950, label: 'Output', sub: 'response\n+ exec cmd', color: colors.yellow }
+  ];
+
+  steps.forEach((s, i) => {
+    const active = phase > (i / steps.length);
+    const alpha = active ? 1 : 0.3;
+    ctx.globalAlpha = alpha;
+
+    // Box
+    drawBox(s.x - 55, 60, 110, 50, s.label, s.color, active);
+
+    // Sub label
+    ctx.fillStyle = colors.dim;
+    ctx.font = '11px monospace';
+    const lines = s.sub.split('\n');
+    lines.forEach((l, li) => ctx.fillText(l, s.x, 130 + li * 15));
+
+    // Arrow to next
+    if (i < steps.length - 1 && active) {
+      ctx.globalAlpha = 1;
+      drawArrow(s.x + 55, 85, steps[i+1].x - 55, 85, s.color, 1);
+    }
+    ctx.globalAlpha = 1;
+  });
+
+  // Code references
+  if (phase > 0.15) drawCodeLabel(200, 180, 'neuron_embedding.py:163');
+  if (phase > 0.3) drawCodeLabel(350, 180, 'genesis2_gen.py:370');
+  if (phase > 0.45) drawCodeLabel(500, 180, 'genesis2_gen.py:386');
+  if (phase > 0.6) drawCodeLabel(650, 180, 'genesis2_gen.py:420');
+  if (phase > 0.75) drawCodeLabel(800, 180, 'genesis2_gen.py:155');
+  if (phase > 0.9) drawCodeLabel(950, 180, 'genesis2_web.py:845');
+
+  // Scoring formula
+  if (phase > 0.5) {
+    ctx.fillStyle = colors.text;
+    ctx.font = '13px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('score = 0.4*sem_query + 0.4*sem_composed + overlap + input_match', 550, 230);
+    ctx.fillText('refined = 0.7*base_score + 0.3*micro_sim', 550, 250);
+  }
+
+  // Neuron pool visualization
+  if (phase > 0.3) {
+    const poolNeurons = makeNeurons(8, 550, 320, 50);
+    const active = Math.floor(phase * 6);
+    poolNeurons.forEach((n, i) => { if (i < active) n.active = true; });
+    for (let i = 0; i < poolNeurons.length; i++) {
+      for (let j = i + 1; j < poolNeurons.length; j++) {
+        if ((i + j) % 3 === 0) drawConnection(poolNeurons[i], poolNeurons[j], colors.cyan, 1, 0.2);
+      }
+    }
+    poolNeurons.forEach(n => drawNeuron(n, t * 0.05));
+    drawLabel(550, 285, 'Shared Neuron Pool', colors.dim);
+  }
+}
+
+// ==================== ANIMATION: EMBEDDING ====================
+function animEmbedding(t) {
+  ctx.fillStyle = colors.bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const phase = (t % 500) / 500;
+
+  ctx.fillStyle = colors.yellow;
+  ctx.font = 'bold 16px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Hash Neuron Embedding (Patent-Critical)', 550, 30);
+
+  // Step 1: Tokenization
+  drawBox(30, 60, 200, 40, 'Input: "check DNS"', colors.accent, true);
+
+  if (phase > 0.05) {
+    drawLabel(130, 130, 'Tokenize', colors.dim);
+    const tokens = ['check', 'DNS', '#che#', '#hec#', '#eck#', '#DNS#', '@ch@', '@DN@'];
+    const maxT = Math.floor(phase * 10);
+    tokens.forEach((tok, i) => {
+      if (i < maxT) {
+        const x = 40 + (i % 4) * 60;
+        const y = 145 + Math.floor(i / 4) * 22;
+        ctx.fillStyle = i < 2 ? colors.text : i < 6 ? colors.orange : colors.purple;
+        ctx.font = '11px monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(tok, x, y);
+      }
+    });
+    drawCodeLabel(130, 200, '_tokenize() :44');
+  }
+
+  // Step 2: Hash + Project
+  if (phase > 0.2) {
+    drawBox(280, 80, 170, 100, '', colors.orange, false);
+    drawLabel(365, 100, 'MD5 Hash', colors.orange);
+    drawLabel(365, 120, '+ Random Projection', colors.orange);
+    drawLabel(365, 145, '65536 buckets', colors.dim);
+    drawLabel(365, 165, 'x dim=384', colors.dim);
+    drawArrow(230, 100, 280, 130, colors.orange, Math.min(1, (phase - 0.2) / 0.1));
+    drawCodeLabel(365, 195, '_hash_token() :59');
+  }
+
+  // Step 3: IDF weighting
+  if (phase > 0.35) {
+    drawBox(500, 80, 140, 100, '', colors.cyan, false);
+    drawLabel(570, 100, 'IDF Weighting', colors.cyan);
+    drawLabel(570, 125, 'word: 1.0', colors.text);
+    drawLabel(570, 145, 'n-gram: 0.3', colors.text);
+    drawLabel(570, 170, 'L2 normalize', colors.dim);
+    drawArrow(450, 130, 500, 130, colors.cyan, Math.min(1, (phase - 0.35) / 0.1));
+    drawCodeLabel(570, 195, 'encode() :72');
+  }
+
+  // Step 4: Neuron enrichment
+  if (phase > 0.5) {
+    drawBox(690, 60, 180, 130, '', colors.purple, false);
+    drawLabel(780, 80, 'Neuron Pool Match', colors.purple);
+    drawLabel(780, 105, 'word index lookup', colors.text);
+    drawLabel(780, 125, 'F1 > 0.15 filter', colors.text);
+    drawLabel(780, 150, 'cosine fallback', colors.text);
+    drawLabel(780, 175, 'adaptive mixing', colors.dim);
+    drawArrow(640, 130, 690, 100, colors.purple, Math.min(1, (phase - 0.5) / 0.1));
+    drawCodeLabel(780, 205, 'NeuronPoolEmbedding.encode() :163');
+  }
+
+  // Step 5: Output
+  if (phase > 0.7) {
+    drawBox(920, 100, 150, 60, '384-dim vector', colors.route, true);
+    drawArrow(870, 130, 920, 130, colors.route, Math.min(1, (phase - 0.7) / 0.1));
+
+    // Formula
+    ctx.fillStyle = colors.text;
+    ctx.font = '12px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('result = normalize(', 550, 270);
+    ctx.fillStyle = colors.orange;
+    ctx.fillText('raw_mix * hash_emb', 550, 290);
+    ctx.fillStyle = colors.text;
+    ctx.fillText('+', 550, 310);
+    ctx.fillStyle = colors.purple;
+    ctx.fillText('neuron_mix * neuron_context', 550, 330);
+    ctx.fillStyle = colors.text;
+    ctx.fillText(')', 550, 350);
+
+    ctx.fillStyle = colors.dim;
+    ctx.fillText('neuron_mix = min(0.85, 0.2 + max_weight*0.5 + matched*0.01)', 550, 370);
+  }
+}
+
+// Animation descriptions
+const animDescs = {
+  learn: 'learn() in genesis2_gen.py:221 — 1-step learning with frozen shared neurons and trainable micro-head',
+  cascade: 'generate() in genesis2_gen.py:318 — Cascade activation spreads through reverse index to find related experts',
+  generate: 'Full pipeline: Input → NeuronPoolEmbedding → ANN → Seed → Cascade → Composer → Response + Exec',
+  embedding: 'NeuronPoolEmbedding.encode() in neuron_embedding.py:163 — Hash encoding enriched by neuron pool concepts'
+};
+
+function startAnim(type) {
+  currentAnim = type;
+  animTime = 0;
+  document.querySelectorAll('.anim-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('animDesc').textContent = animDescs[type];
+}
+
+function animate() {
+  animTime++;
+  switch(currentAnim) {
+    case 'learn': animLearn(animTime); break;
+    case 'cascade': animCascade(animTime); break;
+    case 'generate': animGenerate(animTime); break;
+    case 'embedding': animEmbedding(animTime); break;
+  }
+  animFrame = requestAnimationFrame(animate);
+}
+
+// Canvas resize
+function resizeCanvas() {
+  const container = canvas.parentElement;
+  const w = Math.min(1100, container.clientWidth - 40);
+  canvas.width = w;
+  canvas.height = Math.min(380, w * 0.35);
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+// Start
+document.getElementById('animDesc').textContent = animDescs.learn;
+animate();
+</script>
+
+</body>
+</html>
