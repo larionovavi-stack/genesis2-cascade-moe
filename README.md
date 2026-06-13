@@ -20,7 +20,8 @@
   <a href="https://avlarion.gumroad.com/l/lqtsbo">Academic $299</a> &bull;
   <a href="https://avlarion.gumroad.com/l/vrzudu">Professional $1,499</a> &bull;
   <a href="https://avlarion.gumroad.com/l/atmon">Enterprise $4,999</a> &bull;
-  <a href="https://avlarion.gumroad.com/l/ymyagw">Source + Patent Bundle $5,000</a>
+  <a href="https://avlarion.gumroad.com/l/ymyagw">Source + Patent Bundle $5,000</a> &bull;
+  <a href="https://larionovavi-stack.github.io/genesis2-cascade-moe/docs/reference-guide.html"><strong>Interactive Reference Guide</strong></a>
 </p>
 
 ---
