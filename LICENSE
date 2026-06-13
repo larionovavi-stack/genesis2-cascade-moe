@@ -1,0 +1,24 @@
+PROPRIETARY LICENSE
+
+Copyright (c) 2026 Larionov Alexander Viktorovich. All rights reserved.
+
+This repository contains documentation and demo materials for Genesis 2 —
+Cascade MoE Neural Network, a patented neural network architecture.
+
+The full source code, trained model, and datasets are available for purchase at:
+https://avlarion.gumroad.com
+
+Patent pending: FIPS Russia, filed 31.05.2026, IPC G06N 3/04
+RCIS Blockchain Certificate: #1823-376-572
+
+TERMS:
+1. You may view and fork this repository for evaluation purposes only.
+2. You may NOT use the architecture described herein in commercial products
+   without a valid license purchased from the author.
+3. The patent covers the Cascade MoE architecture including:
+   shared neuron pool, expert-as-route, cascade activation without router,
+   one-step learning with zero forgetting, adaptive threshold with neuron
+   splitting, native generation via concept chains, infinite context,
+   and hash neuron embedding.
+
+For licensing inquiries: avlarionov@hotmail.com
