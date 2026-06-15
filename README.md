@@ -25,10 +25,10 @@
 </p>
 
 <p align="center">
-  <a href="https://667f0be8bf592bf83e.gradio.live"><img src="https://img.shields.io/badge/Live_Demo-Try_Now-brightgreen?style=for-the-badge" alt="Live Demo"></a>
+  <a href="https://gist.github.com/larionovavi-stack/d9bdc484813df7cb488a842cb4a0cd62"><img src="https://img.shields.io/badge/Live_Demo-Try_Now-brightgreen?style=for-the-badge" alt="Live Demo"></a>
 </p>
 
-> **[Try the Live Demo](https://667f0be8bf592bf83e.gradio.live)** — model hosted on [Kaggle](https://www.kaggle.com/datasets/alexanderlar/genesis2-cascade-moe-model). If the demo is unavailable, email **avlarionov@hotmail.com** to request a restart.
+> **[Try the Live Demo](https://gist.github.com/larionovavi-stack/d9bdc484813df7cb488a842cb4a0cd62)** — click the link in the Gist for the current demo URL. Model hosted on [Kaggle](https://www.kaggle.com/datasets/alexanderlar/genesis2-cascade-moe-model). If the demo is unavailable, email **avlarionov@hotmail.com** to request a restart.
 
 ---
 
