@@ -168,6 +168,8 @@ Input → Hash Embedding (512d) → ANN Search → Seed Experts
 
 ## Knowledge Domains (22)
 
+> **Note:** The included model is primarily trained on **Russian-language** data for networking, servers, and infrastructure. It understands English queries but responds best in Russian. Genesis 2 learns new facts in **130ms** — you can train your own model on any language and any domain in minutes, not days.
+
 <table>
 <tr><td>Networking (Cisco, MikroTik)</td><td>Linux Administration</td><td>Docker & Kubernetes</td></tr>
 <tr><td>Security & Hardening</td><td>WiFi Configuration</td><td>DNS/DHCP/BIND</td></tr>
