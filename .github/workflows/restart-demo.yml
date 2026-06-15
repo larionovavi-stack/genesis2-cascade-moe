@@ -1,13 +1,15 @@
 name: Restart Genesis 2 Demo
 on:
   schedule:
-    - cron: '0 */11 * * *'  # Every 11 hours
-  workflow_dispatch: # Manual trigger
+    - cron: '0 */11 * * *'
+  workflow_dispatch:
 
 jobs:
   restart:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Install Kaggle API
         run: pip install kaggle
 
@@ -16,6 +18,10 @@ jobs:
           mkdir -p ~/.kaggle
           echo '{"username":"alexanderlar","key":"${{ secrets.KAGGLE_KEY }}"}' > ~/.kaggle/kaggle.json
           chmod 600 ~/.kaggle/kaggle.json
+
+      - name: Inject GH token into demo code
+        run: |
+          sed -i "s|os.environ.get('GH_GIST_TOKEN', '')|'${{ secrets.GH_GIST_TOKEN }}'|g" .github/kaggle_demo_code.py
 
       - name: Create and push notebook
         run: |
