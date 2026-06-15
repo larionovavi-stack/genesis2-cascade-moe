@@ -24,6 +24,12 @@
   <a href="https://larionovavi-stack.github.io/genesis2-cascade-moe/docs/reference-guide.html"><strong>Interactive Reference Guide</strong></a>
 </p>
 
+<p align="center">
+  <a href="https://667f0be8bf592bf83e.gradio.live"><img src="https://img.shields.io/badge/Live_Demo-Try_Now-brightgreen?style=for-the-badge" alt="Live Demo"></a>
+</p>
+
+> **[Try the Live Demo](https://667f0be8bf592bf83e.gradio.live)** — model hosted on [Kaggle](https://www.kaggle.com/datasets/alexanderlar/genesis2-cascade-moe-model). If the demo is unavailable, email **avlarionov@hotmail.com** to request a restart.
+
 ---
 
 ## What is Genesis 2?
