@@ -255,7 +255,7 @@ genesis2-cascade-moe/
 
 ## Affiliate Program
 
-Earn **30% commission** on every sale by promoting Genesis 2.
+Earn **40% commission** on every sale by promoting Genesis 2.
 
 **[→ Join the Affiliate Program](https://avlarion.gumroad.com/affiliates)**
 
