@@ -253,6 +253,14 @@ genesis2-cascade-moe/
 - **[atwSCADA](https://github.com/larionovavi-stack/awtscada)** — Free SCADA system in a single HTML file (IEC 61850, OPC UA, Modbus TCP)
 - **[Network Automation with AI](https://github.com/larionovavi-stack/network-automation-ai-guide)** — 132-page practical guide ($29)
 
+## Affiliate Program
+
+Earn **30% commission** on every sale by promoting Genesis 2.
+
+**[→ Join the Affiliate Program](https://avlarion.gumroad.com/affiliates)**
+
+Payouts via Gumroad. No approval required — instant access.
+
 ## License
 
 This repository contains the documentation, architecture description, and demo materials. The full source code and trained model are available through [Gumroad](https://avlarion.gumroad.com).
