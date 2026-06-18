@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="#benchmarks"><img src="https://img.shields.io/badge/accuracy-100%25_(111%2F111)-brightgreen?style=for-the-badge" alt="Accuracy"></a>
-  <a href="#benchmarks"><img src="https://img.shields.io/badge/neurons-12,584-blue?style=for-the-badge" alt="Neurons"></a>
+  <a href="#benchmarks"><img src="https://img.shields.io/badge/neurons-12,651-blue?style=for-the-badge" alt="Neurons"></a>
   <a href="#benchmarks"><img src="https://img.shields.io/badge/experts-10,800+-blue?style=for-the-badge" alt="Experts"></a>
   <a href="#architecture"><img src="https://img.shields.io/badge/GPU-not%20required-red?style=for-the-badge" alt="No GPU"></a>
   <a href="#whats-new"><img src="https://img.shields.io/badge/version-v1.1-cyan?style=for-the-badge" alt="v1.1"></a>
@@ -41,7 +41,7 @@ Genesis 2 is a **fundamentally new neural network architecture** that eliminates
 
 ```
 Traditional MoE:  Expert₁[500MB] + Expert₂[500MB] + ... = 50GB+, GPU required
-Genesis 2:        Expert₁[route] + Expert₂[route] + ... = 3.5GB total, CPU only
+Genesis 2:        Expert₁[route] + Expert₂[route] + ... = 3.64 GB total, CPU only
                   ↑ shared neuron pool, each expert is just a list of neuron IDs
 ```
 
@@ -110,7 +110,7 @@ Released: **June 2026**
 
 | Metric | v1.0 | **v1.1** |
 |:-------|:-----|:---------|
-| Shared Neurons | 12,100+ | **12,584** |
+| Shared Neurons | 12,100+ | **12,651** |
 | Trained Experts | 10,800+ | **10,800+** |
 | Test accuracy | 100% (30/30) | **100% (111/111)** |
 | Topics covered | 15 | **43** |
@@ -120,7 +120,7 @@ Released: **June 2026**
 | Neuron splitting | ✗ | **✓ (auto)** |
 | Dialogue context | ✗ | **✓** |
 | Command substitution | ✗ | **✓** |
-| RAM usage | 3.5GB | **3.6GB** |
+| RAM usage | 3.5GB | **3.64 GB** |
 | GPU required | No | **No** |
 
 ### Test Results v1.1 — 111/111 across 43 topics
@@ -160,7 +160,7 @@ Genesis 2 is built on 8 patented innovations:
 All neurons live in a single shared pool. Experts don't have their own parameters — they reference neurons by ID. One neuron can serve 50+ experts simultaneously. This makes the model **100x smaller** than traditional MoE.
 
 ### 2. Expert as Route
-Each expert is just a list of neuron IDs — a "route" through the shared pool. Adding a new expert costs **bytes, not megabytes**. 10,000 experts fit in 3.5GB.
+Each expert is just a list of neuron IDs — a "route" through the shared pool. Adding a new expert costs **bytes, not megabytes**. 10,800+ expert routes fit in 3.64 GB.
 
 ### 3. Cascade Activation (No Router)
 Traditional MoE uses a trained router to pick experts. Genesis 2 uses a reverse index (neuron → experts) to find relevant experts in **0.14ms**. No router training, no routing errors.
@@ -185,9 +185,9 @@ Input → Hash Embedding (512d) → ANN Search → Seed Experts
      → Cascade Activation → Shared Neuron Pool → Composer → Output
 ```
 
-## Knowledge Domains (22)
+## Knowledge Domains (35)
 
-> **Note:** The included model is primarily trained on **Russian-language** data for networking, servers, and infrastructure. It understands English queries but responds best in Russian. Genesis 2 learns new facts in **130ms** — you can train your own model on any language and any domain in minutes, not days.
+> The model is fully bilingual (RU + EN). Trained on 35 domains with 100% accuracy in both languages. Genesis 2 learns new facts in **130ms** — you can train your own model on any language and any domain in minutes, not days.
 
 <table>
 <tr><td>Networking (Cisco, MikroTik)</td><td>Linux Administration</td><td>Docker & Kubernetes</td></tr>
