@@ -4,6 +4,9 @@ on:
     - cron: '0 */11 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   restart:
     runs-on: ubuntu-latest
@@ -50,3 +53,15 @@ jobs:
 
           kaggle kernels push -p /tmp/push
           echo "Notebook pushed to Kaggle!"
+
+      # GitHub отключает расписание, если в репозитории 60 дней ничего не менялось.
+      # Именно так демонстрация и встала в августе: процесс выключили молча.
+      # Эта отметка — след активности, чтобы такого больше не случилось.
+      - name: Heartbeat commit
+        run: |
+          date -u +"%Y-%m-%d %H:%M UTC" > .github/last-run.txt
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/last-run.txt
+          git commit -m "chore: demo restarted (keeps scheduled workflow alive)" || exit 0
+          git push
