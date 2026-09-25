@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Genesis 2 — Cascade MoE Neural Network | CPU-Only AI, No GPU Required | Buy Source Code</title>
-<meta name="description" content="Genesis 2 is a patented CPU-only expert system: plain-language sysadmin and networking questions in, shell commands out. 12,085 experts, 55% of held-out queries answered with a working command (78% reach the right tool), 204 ms median, no GPU. Source from $99.">
+<meta name="description" content="Genesis 2 is a patented CPU-only expert system: plain-language sysadmin and networking questions in, shell commands out. 12,085 experts, Built Russian-first: 80% of held-out Russian queries answered with a working command, 38% in English. 204 ms median, no GPU. Source from $99.">
 <meta name="keywords" content="neural network, mixture of experts, cascade MoE, CPU only, no GPU, AI, machine learning, network automation, DevOps, sysadmin, self-hosted, on-premise, patent, source code, buy">
 <meta name="author" content="Larionov Alexander Viktorovich">
 <meta name="robots" content="index, follow">
@@ -12,7 +12,7 @@
 
 <!-- Open Graph -->
 <meta property="og:title" content="Genesis 2 — Cascade MoE Neural Network">
-<meta property="og:description" content="Patented CPU-only expert system. 12,085 experts, 55% of held-out queries answered with a working command (78% reach the right tool), 204 ms median, no GPU. Source from $99.">
+<meta property="og:description" content="Patented CPU-only expert system. 12,085 experts, Built Russian-first: 80% of held-out Russian queries answered with a working command, 38% in English. 204 ms median, no GPU. Source from $99.">
 <meta property="og:type" content="product">
 <meta property="og:url" content="https://larionovavi-stack.github.io/genesis2-cascade-moe/">
 <meta property="og:image" content="https://raw.githubusercontent.com/larionovavi-stack/genesis2-cascade-moe/main/assets/banner_genesis2.png">
@@ -21,7 +21,7 @@
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Genesis 2 — CPU-Only Neural Network, No GPU Required">
-<meta name="twitter:description" content="Patented Cascade MoE architecture. 12,085 experts, 55% measured on held-out queries, no GPU. Buy source code.">
+<meta name="twitter:description" content="Patented Cascade MoE architecture. 12,085 experts. Russian-first: 80% on held-out Russian queries, 38% English. No GPU.">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/larionovavi-stack/genesis2-cascade-moe/main/assets/banner_genesis2.png">
 
 <!-- Structured Data for Google -->
@@ -30,7 +30,7 @@
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "Genesis 2 — Cascade MoE Neural Network",
-  "description": "Patented CPU-only architecture with a shared neuron pool, zero catastrophic forgetting by construction, and one-step learning. 12,085 trained experts, 55% of held-out queries answered with a working command, 204 ms median latency.",
+  "description": "Patented CPU-only architecture with a shared neuron pool, zero catastrophic forgetting by construction, and one-step learning. 12,085 trained experts. Russian-first: 80% of held-out Russian queries answered with a working command, 38% in English. 204 ms median latency.",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "macOS, Linux, Windows",
   "image": "https://raw.githubusercontent.com/larionovavi-stack/genesis2-cascade-moe/main/assets/banner_genesis2.png",
@@ -88,7 +88,7 @@
   "featureList": [
     "CPU-only inference (no GPU required)",
     "10,800+ trained experts",
-    "55% of 49 held-out queries answered with a command that does the job (benchmark_honest.py ships with it)",
+    "80% of held-out Russian queries answered with a working command, 38% in English (benchmark_honest.py ships with it)",
     "204 ms median inference latency, CPU only",
     "Zero catastrophic forgetting",
     "1-step learning (130ms per fact)",
@@ -198,9 +198,9 @@ footer{text-align:center;padding:40px 20px;color:var(--text2);border-top:1px sol
     <img src="https://raw.githubusercontent.com/larionovavi-stack/genesis2-cascade-moe/main/assets/banner_genesis2.png" alt="Genesis 2 Banner" width="900">
     <h1><span>Genesis 2 — Cascade MoE Neural Network</span></h1>
     <p>A patented architecture that runs entirely on CPU and learns a new fact in under a second. No GPU. No cloud. No external model weights. Self-hosted.</p>
-    <p style="opacity:.75;font-size:.95em">Measured on held-out paraphrases the model has never seen: <strong>27 of 49 answered with a command that does the job (55%)</strong>; 38 of 49 at least reach for the right tool. 204&nbsp;ms median. The benchmark that produces that number ships with the source and separates real answers from exact-match lookups.</p>
+    <p style="opacity:.75;font-size:.95em">Built Russian-first, and measured that way on held-out paraphrases it has never seen: <strong>16 of 20 Russian queries (80%)</strong> answered with a command that does the job, against <strong>11 of 29 in English (38%)</strong>. The English third of the training data was labelled far more coarsely — that gap is a labelling gap, not an architecture one. 204&nbsp;ms median. The benchmark that produces that number ships with the source and separates real answers from exact-match lookups.</p>
     <div class="badges">
-      <span class="badge" style="background:rgba(63,185,80,0.2);color:var(--green)">55% held-out</span>
+      <span class="badge" style="background:rgba(63,185,80,0.2);color:var(--green)">80% RU · 38% EN</span>
       <span class="badge" style="background:rgba(88,166,255,0.2);color:var(--accent)">10,800+ Experts</span>
       <span class="badge" style="background:rgba(240,136,62,0.2);color:var(--orange)">204 ms median</span>
       <span class="badge" style="background:rgba(248,81,73,0.2);color:var(--red)">No GPU Required</span>
@@ -248,8 +248,10 @@ footer{text-align:center;padding:40px 20px;color:var(--text2);border-top:1px sol
       <tr><th>Metric</th><th>Value</th></tr>
       <tr><td>Trained Experts</td><td>12,085</td></tr>
       <tr><td>Shared Neurons</td><td>12,651</td></tr>
-      <tr><td>Does what was asked (49 held-out, RU+EN)</td><td>55% (27/49)</td></tr>
-      <tr><td>Reaches the right tool</td><td>78% (38/49)</td></tr>
+      <tr><td>Does what was asked &mdash; Russian</td><td><strong>80% (16/20)</strong></td></tr>
+      <tr><td>Does what was asked &mdash; English</td><td>38% (11/29)</td></tr>
+      <tr><td>Does what was asked &mdash; combined</td><td>55% (27/49)</td></tr>
+      <tr><td>Training corpus</td><td>69% Russian / 31% English</td></tr>
       <tr><td>Exact-match lookups in that set</td><td>0 &mdash; excluded by design</td></tr>
       <tr><td>Inference Latency</td><td>204 ms median, 267 ms p95</td></tr>
       <tr><td>Model Load Time</td><td>45-130 s (3.6 GB state)</td></tr>

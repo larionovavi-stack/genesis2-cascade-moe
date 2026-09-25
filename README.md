@@ -6,11 +6,11 @@
 
 <p align="center">
   <strong>A CPU-only architecture that learns a new fact in under a second</strong><br>
-  <sub>No GPU. No cloud. No external model weights. 55% of held-out queries answered with a command that actually does the job — the benchmark that says so ships with it.</sub>
+  <sub>No GPU. No cloud. No external model weights. Built Russian-first: <b>80% of held-out Russian queries</b> answered with a command that does the job, <b>38% in English</b>. The benchmark that says so ships with it.</sub>
 </p>
 
 <p align="center">
-  <a href="#benchmarks"><img src="https://img.shields.io/badge/accuracy-55%25_(27%2F49_held--out)-orange?style=for-the-badge" alt="Accuracy"></a>
+  <a href="#benchmarks"><img src="https://img.shields.io/badge/Russian-80%25_%7C_English-38%25-orange?style=for-the-badge" alt="Accuracy"></a>
   <a href="#benchmarks"><img src="https://img.shields.io/badge/neurons-12,651-blue?style=for-the-badge" alt="Neurons"></a>
   <a href="#benchmarks"><img src="https://img.shields.io/badge/experts-10,800+-blue?style=for-the-badge" alt="Experts"></a>
   <a href="#architecture"><img src="https://img.shields.io/badge/GPU-not%20required-red?style=for-the-badge" alt="No GPU"></a>
@@ -104,7 +104,7 @@ Released: **June 2026**
 | 💬 **Dialogue Context** | Model tracks conversation state: "no thanks", "nothing needed", "пока ничего" → correct conversational replies instead of technical routing |
 | 🔧 **Command Substitution** | Auto-fills IP/port/subnet from user's question into exec commands: `ping 10.0.0.1` → `ping -c 4 10.0.0.1` |
 | 🔤 **Typo Normalization** | Repeated Cyrillic letters collapsed: "ппривет" → "привет", "приввет" → "привет" (Latin preserved: "need" stays "need") |
-| 📊 **Honest benchmark** | `benchmark_honest.py` excludes exact-match lookups, then grades the **command**, not the prose around it. **27/49 = 55%** do what was asked; 38/49 = 78% at least reach for the right tool |
+| 📊 **Honest benchmark** | `benchmark_honest.py` excludes exact-match lookups, then grades the **command**, not the prose around it. **80% in Russian, 38% in English** — the corpus is Russian-first and the gap is a labelling gap, not an architecture one |
 | 🌐 **Bilingual** | Russian and English answered from one shared model, not two. Both languages are represented in the held-out set above |
 
 ## Benchmarks
@@ -113,7 +113,9 @@ Released: **June 2026**
 |:-------|:-----|:---------|
 | Shared Neurons | 12,100+ | **12,651** |
 | Trained Experts | 10,800+ | **12,085** |
-| Does what was asked | 100% (30/30) — see note | **55% (27/49 held-out)** |
+| Does what was asked — Russian | 100% (30/30) — see note | **80% (16/20 held-out)** |
+| Does what was asked — English | — | **38% (11/29 held-out)** |
+| Does what was asked — combined | — | **55% (27/49 held-out)** |
 | Right tool reached for | — | **78% (38/49 held-out)** |
 | Topics covered | 15 | **43** |
 | Inference latency | 18-27ms — wrong, see note | **204 ms median / 267 ms p95** |
@@ -147,7 +149,7 @@ queries                  : 49
 verbatim in training data: 0    (excluded — these are lookups)
 answered via cascade     : 49
 never taught (not in corpus): 0  — reported, not scored
-does what was asked      : 27/49 = 55%   <-- the number that matters
+does what was asked      : 27/49 = 55%   <-- Russian 16/20 = 80%, English 11/29 = 38%
 right tool, any use of it: 38/49 = 78%
 latency median / p95     : 204ms / 267ms
 model load               : 44s, CPU only, no GPU
@@ -165,9 +167,32 @@ one pattern: the cascade reaches the right topic and picks the wrong expert off 
 "Free space on the root partition" returns disk *cleanup*. "Scan a subnet" returns
 `arp -an`. "Make a dump of a PostgreSQL database" returns `pg_isready`.
 
-The benchmark also checks whether the corpus contains anything that could satisfy each
-query. For all 49 it does — so these are routing failures, not missing knowledge. That
-is a far more useful thing to know than a score of 100%.
+### Russian-first, and the data says why
+
+This was built for Russian. The split is not subtle:
+
+| | facts | with a command | of those, boilerplate\* |
+|---|---:|---:|---:|
+| Russian questions | 7,615 (69%) | 5,759 (76%) | 1,276 — **22%** |
+| English questions | 3,391 (31%) | 1,852 (55%) | 1,439 — **78%** |
+
+\* boilerplate = the same command is attached to ten or more unrelated questions.
+
+The Russian half carries 5,759 facts across 4,484 distinct commands, close to one command
+per fact. The English third carries 1,852 labelled facts across just **453** commands —
+`kubectl get pods -A` alone is glued to 239 English questions, `ansible --version` to 125.
+
+The measured accuracy follows that line exactly: **80% Russian, 38% English**. In the ten
+held-out pairs that ask the same thing in both languages, the result diverges in ten cases
+and English is the one that fails in eight of them.
+
+Coverage is not the problem. `audit_coverage.py` checks, per query and by an explicit
+keyword rule rather than a similarity threshold, whether the corpus holds a fact teaching
+that exact task with a correct command. It does for **49 of 49**, in both languages. So the
+English gap is a labelling gap, and relabelling that third is the next piece of work —
+not more architecture.
+
+All 22 misses are printed in full with the command each produced.
 
 ## Architecture
 
