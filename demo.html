@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Genesis 2 — live demo</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--fg:#e6edf3;--dim:#8b949e;--cyan:#39d0d8;--red:#f85149;--border:#30363d}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+       min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{max-width:620px;width:100%;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px}
+  h1{margin:0 0 6px;font-size:1.35em}
+  .sub{color:var(--dim);margin:0 0 24px;font-size:.95em}
+  .status{padding:16px 18px;border-radius:10px;background:rgba(57,208,216,.08);border:1px solid rgba(57,208,216,.25);margin-bottom:20px}
+  .status.bad{background:rgba(248,81,73,.08);border-color:rgba(248,81,73,.3)}
+  a.btn{display:inline-block;background:var(--cyan);color:#04252a;font-weight:700;text-decoration:none;
+        padding:12px 22px;border-radius:9px;margin:4px 8px 4px 0}
+  a.ghost{display:inline-block;color:var(--fg);text-decoration:none;border:1px solid var(--border);
+          padding:12px 22px;border-radius:9px;margin:4px 8px 4px 0}
+  code{background:#0d1117;border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:.9em}
+  .facts{border-top:1px solid var(--border);margin-top:24px;padding-top:18px;color:var(--dim);font-size:.9em}
+  .facts b{color:var(--fg)}
+  .spin{display:inline-block;width:13px;height:13px;border:2px solid var(--dim);border-top-color:transparent;
+        border-radius:50%;animation:s .8s linear infinite;vertical-align:-2px;margin-right:8px}
+  @keyframes s{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Genesis 2 — live demo</h1>
+  <p class="sub">Ask about Linux, networking or SCADA, in English or Russian. Runs on a CPU, no GPU.</p>
+
+  <div class="status" id="status"><span class="spin"></span>Looking up the current demo address…</div>
+
+  <div id="actions"></div>
+
+  <div class="facts">
+    The demo runs on a free Kaggle session and its public address rotates roughly every 11 hours,
+    so this page looks up the current one instead of hard-coding it.
+    <br><br>
+    Measured on held-out queries the model has never seen: <b>38 of 49 correct (78%)</b>,
+    <b>276&nbsp;ms</b> median. The benchmark that produces those numbers ships with the source and
+    separates real cascade answers from exact-match lookups —
+    <a href="https://github.com/larionovavi-stack/genesis2-cascade-moe/blob/main/benchmark_honest.py" style="color:var(--cyan)">benchmark_honest.py</a>.
+  </div>
+</div>
+
+<script>
+const GIST = 'd9bdc484813df7cb488a842cb4a0cd62';
+const statusEl = document.getElementById('status');
+const actionsEl = document.getElementById('actions');
+
+function repoButtons(){
+  return '<a class="ghost" href="https://github.com/larionovavi-stack/genesis2-cascade-moe">Source on GitHub</a>' +
+         '<a class="ghost" href="https://larionovavi-stack.github.io/genesis2-cascade-moe/">What it is</a>';
+}
+
+function fail(msg){
+  statusEl.className = 'status bad';
+  statusEl.innerHTML = msg;
+  actionsEl.innerHTML = repoButtons();
+}
+
+(async () => {
+  try {
+    const r = await fetch('https://api.github.com/gists/' + GIST, {cache: 'no-store'});
+    if (!r.ok) throw new Error('gist ' + r.status);
+    const g = await r.json();
+    const file = Object.values(g.files)[0];
+    const text = file.content || '';
+
+    const url = (text.match(/https:\/\/[a-z0-9]+\.gradio\.live/i) || [])[0];
+    const stampMatch = text.match(/Updated:\s*([\d-]+\s[\d:]+)\s*UTC/i);
+    if (!url) throw new Error('no address published yet');
+
+    const stamp = stampMatch ? new Date(stampMatch[1].replace(' ', 'T') + 'Z') : new Date(g.updated_at);
+    const hours = (Date.now() - stamp.getTime()) / 36e5;
+
+    // gradio.live addresses expire after 72 hours.
+    if (hours > 72) {
+      fail('The demo address published ' + Math.round(hours) + ' hours ago has expired, and a fresh one ' +
+           'has not been published yet. The restart job runs every 11 hours — try again later, ' +
+           'or run it locally: the source and the 3.6&nbsp;GB state are one <code>load_state</code> call apart.');
+      return;
+    }
+
+    const age = hours < 1 ? 'minutes ago' : Math.round(hours) + ' hours ago';
+    statusEl.innerHTML = 'Demo is up — address published ' + age + '. Sending you there…';
+    actionsEl.innerHTML = '<a class="btn" href="' + url + '">Open the demo</a>' + repoButtons();
+    setTimeout(() => { location.href = url; }, 1800);
+
+  } catch (e) {
+    fail('Could not reach the address list (' + e.message + '). ' +
+         'The demo runs on a free Kaggle session and is not always up. ' +
+         'Everything else is below.');
+  }
+})();
+</script>
+</body>
+</html>
