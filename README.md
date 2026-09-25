@@ -6,11 +6,11 @@
 
 <p align="center">
   <strong>A CPU-only architecture that learns a new fact in under a second</strong><br>
-  <sub>No GPU. No cloud. No external model weights. 78% on held-out queries — the benchmark that says so ships with it.</sub>
+  <sub>No GPU. No cloud. No external model weights. 55% of held-out queries answered with a command that actually does the job — the benchmark that says so ships with it.</sub>
 </p>
 
 <p align="center">
-  <a href="#benchmarks"><img src="https://img.shields.io/badge/accuracy-78%25_(38%2F49_held--out)-yellowgreen?style=for-the-badge" alt="Accuracy"></a>
+  <a href="#benchmarks"><img src="https://img.shields.io/badge/accuracy-55%25_(27%2F49_held--out)-orange?style=for-the-badge" alt="Accuracy"></a>
   <a href="#benchmarks"><img src="https://img.shields.io/badge/neurons-12,651-blue?style=for-the-badge" alt="Neurons"></a>
   <a href="#benchmarks"><img src="https://img.shields.io/badge/experts-10,800+-blue?style=for-the-badge" alt="Experts"></a>
   <a href="#architecture"><img src="https://img.shields.io/badge/GPU-not%20required-red?style=for-the-badge" alt="No GPU"></a>
@@ -104,7 +104,7 @@ Released: **June 2026**
 | 💬 **Dialogue Context** | Model tracks conversation state: "no thanks", "nothing needed", "пока ничего" → correct conversational replies instead of technical routing |
 | 🔧 **Command Substitution** | Auto-fills IP/port/subnet from user's question into exec commands: `ping 10.0.0.1` → `ping -c 4 10.0.0.1` |
 | 🔤 **Typo Normalization** | Repeated Cyrillic letters collapsed: "ппривет" → "привет", "приввет" → "привет" (Latin preserved: "need" stays "need") |
-| 📊 **Honest benchmark** | `benchmark_honest.py` checks every test query against the training corpus *before* running it, so exact-match lookups can never be counted as model answers. **38/49 = 78%** on held-out paraphrases |
+| 📊 **Honest benchmark** | `benchmark_honest.py` excludes exact-match lookups, then grades the **command**, not the prose around it. **27/49 = 55%** do what was asked; 38/49 = 78% at least reach for the right tool |
 | 🌐 **Bilingual** | Russian and English answered from one shared model, not two. Both languages are represented in the held-out set above |
 
 ## Benchmarks
@@ -113,12 +113,13 @@ Released: **June 2026**
 |:-------|:-----|:---------|
 | Shared Neurons | 12,100+ | **12,651** |
 | Trained Experts | 10,800+ | **12,085** |
-| Test accuracy | 100% (30/30) — see note | **78% (38/49 held-out)** |
+| Does what was asked | 100% (30/30) — see note | **55% (27/49 held-out)** |
+| Right tool reached for | — | **78% (38/49 held-out)** |
 | Topics covered | 15 | **43** |
-| Inference latency | 18-27ms — wrong, see note | **276 ms median / 340 ms p95** |
+| Inference latency | 18-27ms — wrong, see note | **204 ms median / 267 ms p95** |
 | Learning speed | 130-550ms | **130ms** per fact |
 | Zero forgetting (cosine) | 1.000000 | **1.000000** |
-| Model load time | — | **126 s (3.6 GB state)** |
+| Model load time | — | **45-130 s (3.6 GB state)** |
 | Neuron splitting | ✗ | **✓ (auto)** |
 | Dialogue context | ✗ | **✓** |
 | Command substitution | ✗ | **✓** |
@@ -145,16 +146,28 @@ $ python3 benchmark_honest.py
 queries                  : 49
 verbatim in training data: 0    (excluded — these are lookups)
 answered via cascade     : 49
-correct tool chosen      : 38/49 = 78%
-latency median / p95     : 276ms / 340ms
-model load               : 126s, CPU only, no GPU
+never taught (not in corpus): 0  — reported, not scored
+does what was asked      : 27/49 = 55%   <-- the number that matters
+right tool, any use of it: 38/49 = 78%
+latency median / p95     : 204ms / 267ms
+model load               : 44s, CPU only, no GPU
 ```
 
-The eleven failures are printed in full, with what was asked and what came back.
-They cluster into one pattern — the cascade reaches the right topic and picks the
-wrong expert off it ("free space on the root partition" returns disk *cleanup*;
-"scan a subnet" returns `arp -an`). That is a routing-discrimination problem, and
-it is more useful to know than a score of 100%.
+Two levels are graded because the gap between them is the whole story. "Right tool"
+asks only whether the answer reached for the right family of command. "Does what was
+asked" demands the flags that carry out the task: `nginx -t`, not any use of nginx;
+`pg_dump`, not any use of psql; a rule that adds a DROP, not one that lists rules.
+A first pass at this benchmark reported only the first number, 78%, which flattered
+it — grading the command itself gives **55%**.
+
+All 22 misses are printed in full with the command each produced. They cluster into
+one pattern: the cascade reaches the right topic and picks the wrong expert off it.
+"Free space on the root partition" returns disk *cleanup*. "Scan a subnet" returns
+`arp -an`. "Make a dump of a PostgreSQL database" returns `pg_isready`.
+
+The benchmark also checks whether the corpus contains anything that could satisfy each
+query. For all 49 it does — so these are routing failures, not missing knowledge. That
+is a far more useful thing to know than a score of 100%.
 
 ## Architecture
 

@@ -81,7 +81,8 @@ def respond(message, history):
 
 DESC = ('Plain-language sysadmin and networking questions in, shell commands out. '
         'CPU only, no GPU, no external model weights. '
-        'Measured on held-out queries: 38 of 49 correct (78%), 276 ms median - '
+        'Measured on held-out queries: 27 of 49 answered with a command that does the job (55%); '
+        '38 of 49 at least reach for the right tool. 204 ms median. '
         'benchmark_honest.py in the repo produces that number and separates real '
         'cascade answers from exact-match lookups. Each reply below tells you which one you got.')
 
