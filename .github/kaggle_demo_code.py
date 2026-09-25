@@ -42,9 +42,20 @@ generator.load_state(os.path.join(D, 'genesis2_trained_full.pt'))
 elapsed = time.time() - t0
 print('Loaded in ' + str(round(elapsed, 1)) + 's — ' + str(len(generator.routes)) + ' experts, ' + str(len(generator.neurons)) + ' neurons')
 
+# Questions stored verbatim take the exact-match fast path in genesis2_gen.py and
+# return a stored answer without running the cascade. The demo says which path you
+# got rather than passing a lookup off as inference.
+STORED = set()
+for _r in generator.routes.values():
+    _t = _r.get('input_text', '')
+    if isinstance(_t, str):
+        STORED.add(_t.lower().strip())
+print('exact-match table: ' + str(len(STORED)) + ' stored questions')
+
 def respond(message, history):
     if not message.strip():
         return ''
+    is_lookup = message.lower().strip() in STORED
     t0 = time.time()
     result = generator.generate(message, top_k=5, depth=2)
     elapsed = time.time() - t0
@@ -61,11 +72,25 @@ def respond(message, history):
             cmd = cmd[:500] + '...'
         response += '\n\n--- Exec command ---\n' + cmd
     ms = str(int(elapsed * 1000))
-    neurons = str(result.get('neurons_activated', 0))
-    response += '\n\n[' + ms + 'ms | ' + neurons + ' neurons]'
+    if is_lookup:
+        path = 'exact match - stored answer returned, cascade NOT used'
+    else:
+        path = 'cascade over ' + str(result.get('neurons_activated', 0)) + ' neurons'
+    response += '\n\n[' + ms + 'ms | ' + path + ' | CPU only]'
     return response
 
-demo = gr.ChatInterface(respond, title='Genesis 2 Cascade MoE', description='Patented AI - 10800 experts - CPU only - Native embedding (Patent claim 8)', examples=['What is SCADA?', 'просканируй сеть', 'How to check network on Linux?', 'What is Modbus TCP?'])
+DESC = ('Plain-language sysadmin and networking questions in, shell commands out. '
+        'CPU only, no GPU, no external model weights. '
+        'Measured on held-out queries: 38 of 49 correct (78%), 276 ms median - '
+        'benchmark_honest.py in the repo produces that number and separates real '
+        'cascade answers from exact-match lookups. Each reply below tells you which one you got.')
+
+demo = gr.ChatInterface(respond, title='Genesis 2 - Cascade MoE', description=DESC,
+                        examples=['how much free space is left on the root partition',
+                                  'list the current firewall rules',
+                                  'scan a subnet for live hosts',
+                                  'проверить конфигурацию nginx на ошибки',
+                                  'поднять туннель WireGuard и проверить'])
 _app, local_url, share_url = demo.launch(share=True, prevent_thread_lock=True)
 
 # Write share URL to GitHub Gist
