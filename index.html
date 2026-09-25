@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Genesis 2 — Cascade MoE Neural Network | CPU-Only AI, No GPU Required | Buy Source Code</title>
-<meta name="description" content="Genesis 2 is a patented CPU-only neural network with 10,800 experts, 100% accuracy, 18ms inference. No GPU required. Buy source code from $299. Network automation, DevOps, sysadmin AI assistant.">
+<meta name="description" content="Genesis 2 is a patented CPU-only expert system: plain-language sysadmin and networking questions in, shell commands out. 12,085 experts, 78% on held-out queries, 276 ms median, no GPU. Source from $99.">
 <meta name="keywords" content="neural network, mixture of experts, cascade MoE, CPU only, no GPU, AI, machine learning, network automation, DevOps, sysadmin, self-hosted, on-premise, patent, source code, buy">
 <meta name="author" content="Larionov Alexander Viktorovich">
 <meta name="robots" content="index, follow">
@@ -12,7 +12,7 @@
 
 <!-- Open Graph -->
 <meta property="og:title" content="Genesis 2 — Cascade MoE Neural Network">
-<meta property="og:description" content="Patented CPU-only neural network. 10,800 experts, 100% accuracy, 18ms inference. No GPU required. Source code from $299.">
+<meta property="og:description" content="Patented CPU-only expert system. 12,085 experts, 78% on held-out queries, 276 ms median, no GPU. Source from $99.">
 <meta property="og:type" content="product">
 <meta property="og:url" content="https://larionovavi-stack.github.io/genesis2-cascade-moe/">
 <meta property="og:image" content="https://raw.githubusercontent.com/larionovavi-stack/genesis2-cascade-moe/main/assets/banner_genesis2.png">
@@ -21,7 +21,7 @@
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Genesis 2 — CPU-Only Neural Network, No GPU Required">
-<meta name="twitter:description" content="Patented Cascade MoE architecture. 10,800 experts, 100% accuracy, 18ms inference. Buy source code.">
+<meta name="twitter:description" content="Patented Cascade MoE architecture. 12,085 experts, 78% measured on held-out queries, no GPU. Buy source code.">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/larionovavi-stack/genesis2-cascade-moe/main/assets/banner_genesis2.png">
 
 <!-- Structured Data for Google -->
@@ -30,7 +30,7 @@
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "Genesis 2 — Cascade MoE Neural Network",
-  "description": "Patented CPU-only neural network architecture with shared neuron pool, zero catastrophic forgetting, and 1-step learning. 10,800 trained experts, 100% accuracy, 18ms inference.",
+  "description": "Patented CPU-only architecture with a shared neuron pool, zero catastrophic forgetting by construction, and one-step learning. 12,085 trained experts, 78% on held-out queries, 276 ms median latency.",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "macOS, Linux, Windows",
   "image": "https://raw.githubusercontent.com/larionovavi-stack/genesis2-cascade-moe/main/assets/banner_genesis2.png",
@@ -46,7 +46,7 @@
     {
       "@type": "Offer",
       "name": "Academic License",
-      "price": "299",
+      "price": "99",
       "priceCurrency": "USD",
       "url": "https://avlarion.gumroad.com/l/lqtsbo",
       "description": "Source code + pre-trained model for 1 person, academic use",
@@ -56,7 +56,7 @@
     {
       "@type": "Offer",
       "name": "Professional License",
-      "price": "1499",
+      "price": "399",
       "priceCurrency": "USD",
       "url": "https://avlarion.gumroad.com/l/vrzudu",
       "description": "Commercial license for up to 5 users + 30 training datasets",
@@ -66,7 +66,7 @@
     {
       "@type": "Offer",
       "name": "Enterprise License",
-      "price": "4999",
+      "price": "1490",
       "priceCurrency": "USD",
       "url": "https://avlarion.gumroad.com/l/atmon",
       "description": "Unlimited deployment + patent documentation + book",
@@ -88,8 +88,8 @@
   "featureList": [
     "CPU-only inference (no GPU required)",
     "10,800+ trained experts",
-    "100% accuracy on 30-query benchmark",
-    "18ms inference latency",
+    "78% on 49 held-out queries (benchmark_honest.py ships with it)",
+    "276 ms median inference latency, CPU only",
     "Zero catastrophic forgetting",
     "1-step learning (130ms per fact)",
     "Bilingual RU+EN",
@@ -109,7 +109,7 @@
   "author": {"@type": "Person", "name": "Larionov Alexander Viktorovich"},
   "offers": {
     "@type": "Offer",
-    "price": "29",
+    "price": "19",
     "priceCurrency": "USD",
     "url": "https://avlarion.gumroad.com/l/pgjxsk",
     "availability": "https://schema.org/InStock",
@@ -197,11 +197,12 @@ footer{text-align:center;padding:40px 20px;color:var(--text2);border-top:1px sol
   <div class="container">
     <img src="https://raw.githubusercontent.com/larionovavi-stack/genesis2-cascade-moe/main/assets/banner_genesis2.png" alt="Genesis 2 Banner" width="900">
     <h1><span>Genesis 2 — Cascade MoE Neural Network</span></h1>
-    <p>The world's first patented neural architecture that runs entirely on CPU. No GPU costs. No cloud dependency. No token limits. Self-hosted.</p>
+    <p>A patented architecture that runs entirely on CPU and learns a new fact in under a second. No GPU. No cloud. No external model weights. Self-hosted.</p>
+    <p style="opacity:.75;font-size:.95em">Measured on held-out paraphrases the model has never seen: <strong>38 of 49 correct (78%)</strong>, 276&nbsp;ms median. The benchmark that produces that number ships with the source and separates real answers from exact-match lookups.</p>
     <div class="badges">
-      <span class="badge" style="background:rgba(63,185,80,0.2);color:var(--green)">100% Accuracy</span>
+      <span class="badge" style="background:rgba(63,185,80,0.2);color:var(--green)">78% held-out</span>
       <span class="badge" style="background:rgba(88,166,255,0.2);color:var(--accent)">10,800+ Experts</span>
-      <span class="badge" style="background:rgba(240,136,62,0.2);color:var(--orange)">18ms Inference</span>
+      <span class="badge" style="background:rgba(240,136,62,0.2);color:var(--orange)">276 ms median</span>
       <span class="badge" style="background:rgba(248,81,73,0.2);color:var(--red)">No GPU Required</span>
       <span class="badge" style="background:rgba(188,140,255,0.2);color:var(--purple)">Patent Pending</span>
     </div>
@@ -245,10 +246,12 @@ footer{text-align:center;padding:40px 20px;color:var(--text2);border-top:1px sol
     <h2>Benchmarks</h2>
     <table>
       <tr><th>Metric</th><th>Value</th></tr>
-      <tr><td>Trained Experts</td><td>10,800+</td></tr>
-      <tr><td>Shared Neurons</td><td>12,100+</td></tr>
-      <tr><td>Accuracy (30-query, RU+EN)</td><td>100% (30/30)</td></tr>
-      <tr><td>Inference Latency</td><td>18-27ms</td></tr>
+      <tr><td>Trained Experts</td><td>12,085</td></tr>
+      <tr><td>Shared Neurons</td><td>12,651</td></tr>
+      <tr><td>Accuracy (49 held-out queries, RU+EN)</td><td>78% (38/49)</td></tr>
+      <tr><td>Exact-match lookups in that set</td><td>0 &mdash; excluded by design</td></tr>
+      <tr><td>Inference Latency</td><td>276 ms median, 340 ms p95</td></tr>
+      <tr><td>Model Load Time</td><td>126 s (3.6 GB state)</td></tr>
       <tr><td>Learning Speed</td><td>130-550ms per fact</td></tr>
       <tr><td>Zero Forgetting (cosine)</td><td>1.000000</td></tr>
       <tr><td>Cross-lingual RU↔EN</td><td>0.97</td></tr>
@@ -265,7 +268,7 @@ footer{text-align:center;padding:40px 20px;color:var(--text2);border-top:1px sol
     <div class="products">
       <div class="product" style="border-color:var(--cyan)">
         <h3 style="color:var(--cyan)">Academic</h3>
-        <div class="price" style="color:var(--cyan)">$299</div>
+        <div class="price" style="color:var(--cyan)">$99</div>
         <ul>
           <li>Full source code (4 files, 4,232 lines)</li>
           <li>Pre-trained model (10,800 experts)</li>
@@ -278,7 +281,7 @@ footer{text-align:center;padding:40px 20px;color:var(--text2);border-top:1px sol
       </div>
       <div class="product" style="border-color:var(--purple)">
         <h3 style="color:var(--purple)">Professional</h3>
-        <div class="price" style="color:var(--purple)">$1,499</div>
+        <div class="price" style="color:var(--purple)">$399</div>
         <ul>
           <li>Everything in Academic</li>
           <li>30 training datasets (10,600+ facts)</li>
@@ -291,7 +294,7 @@ footer{text-align:center;padding:40px 20px;color:var(--text2);border-top:1px sol
       </div>
       <div class="product" style="border-color:var(--orange)">
         <h3 style="color:var(--orange)">Enterprise</h3>
-        <div class="price" style="color:var(--orange)">$4,999</div>
+        <div class="price" style="color:var(--orange)">$1,490</div>
         <ul>
           <li>Everything in Professional</li>
           <li>Full patent documentation</li>
@@ -395,9 +398,9 @@ open http://localhost:8765</code></pre>
   <h2>No GPU. No Cloud. No Limits.</h2>
   <p style="color:var(--text2)">Start building with a patented neural architecture today.</p>
   <div class="cta-buttons">
-    <a href="https://avlarion.gumroad.com/l/lqtsbo" class="buy-btn" style="background:var(--cyan);color:#000">Academic — $299</a>
-    <a href="https://avlarion.gumroad.com/l/vrzudu" class="buy-btn" style="background:var(--purple);color:#000">Professional — $1,499</a>
-    <a href="https://avlarion.gumroad.com/l/atmon" class="buy-btn" style="background:var(--orange);color:#000">Enterprise — $4,999</a>
+    <a href="https://avlarion.gumroad.com/l/lqtsbo" class="buy-btn" style="background:var(--cyan);color:#000">Academic — $99</a>
+    <a href="https://avlarion.gumroad.com/l/vrzudu" class="buy-btn" style="background:var(--purple);color:#000">Professional — $399</a>
+    <a href="https://avlarion.gumroad.com/l/atmon" class="buy-btn" style="background:var(--orange);color:#000">Enterprise — $1,490</a>
     <a href="https://avlarion.gumroad.com/l/ymyagw" class="buy-btn" style="background:var(--red);color:#fff">Source + Patent — $5,000</a>
   </div>
   <p style="margin-top:20px;color:var(--text2)"><a href="https://github.com/larionovavi-stack/genesis2-cascade-moe">GitHub</a> &bull; <a href="mailto:avlarionov@hotmail.com">avlarionov@hotmail.com</a> &bull; <a href="https://avlarion.gumroad.com">All Products</a></p>

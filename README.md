@@ -5,11 +5,12 @@
 <h1 align="center">Genesis 2 — Cascade MoE Neural Network</h1>
 
 <p align="center">
-  <strong>The World's First Patented Neural Architecture That Runs on CPU</strong>
+  <strong>A CPU-only architecture that learns a new fact in under a second</strong><br>
+  <sub>No GPU. No cloud. No external model weights. 78% on held-out queries — the benchmark that says so ships with it.</sub>
 </p>
 
 <p align="center">
-  <a href="#benchmarks"><img src="https://img.shields.io/badge/accuracy-100%25_(111%2F111)-brightgreen?style=for-the-badge" alt="Accuracy"></a>
+  <a href="#benchmarks"><img src="https://img.shields.io/badge/accuracy-78%25_(38%2F49_held--out)-yellowgreen?style=for-the-badge" alt="Accuracy"></a>
   <a href="#benchmarks"><img src="https://img.shields.io/badge/neurons-12,651-blue?style=for-the-badge" alt="Neurons"></a>
   <a href="#benchmarks"><img src="https://img.shields.io/badge/experts-10,800+-blue?style=for-the-badge" alt="Experts"></a>
   <a href="#architecture"><img src="https://img.shields.io/badge/GPU-not%20required-red?style=for-the-badge" alt="No GPU"></a>
@@ -18,9 +19,9 @@
 </p>
 
 <p align="center">
-  <a href="https://avlarion.gumroad.com/l/lqtsbo">Academic $299</a> &bull;
-  <a href="https://avlarion.gumroad.com/l/vrzudu">Professional $1,499</a> &bull;
-  <a href="https://avlarion.gumroad.com/l/atmon">Enterprise $4,999</a> &bull;
+  <a href="https://avlarion.gumroad.com/l/lqtsbo">Academic $99</a> &bull;
+  <a href="https://avlarion.gumroad.com/l/vrzudu">Professional $399</a> &bull;
+  <a href="https://avlarion.gumroad.com/l/atmon">Enterprise $1,490</a> &bull;
   <a href="https://avlarion.gumroad.com/l/ymyagw">Source + Patent Bundle $5,000</a> &bull;
   <a href="https://larionovavi-stack.github.io/genesis2-cascade-moe/docs/reference-guide.html"><strong>Interactive Reference Guide</strong></a>
 </p>
@@ -103,54 +104,57 @@ Released: **June 2026**
 | 💬 **Dialogue Context** | Model tracks conversation state: "no thanks", "nothing needed", "пока ничего" → correct conversational replies instead of technical routing |
 | 🔧 **Command Substitution** | Auto-fills IP/port/subnet from user's question into exec commands: `ping 10.0.0.1` → `ping -c 4 10.0.0.1` |
 | 🔤 **Typo Normalization** | Repeated Cyrillic letters collapsed: "ппривет" → "привет", "приввет" → "привет" (Latin preserved: "need" stays "need") |
-| 📊 **111/111 Test Suite** | Extended benchmark from 30 to **111 queries** across 43 topics: networking, security, Docker, Cisco, VPN, DNS, databases, monitoring, SCADA, VoIP and more |
-| 🌐 **Bilingual 100%** | Both RU and EN at 100% accuracy simultaneously — verified across all 43 topic categories |
+| 📊 **Honest benchmark** | `benchmark_honest.py` checks every test query against the training corpus *before* running it, so exact-match lookups can never be counted as model answers. **38/49 = 78%** on held-out paraphrases |
+| 🌐 **Bilingual** | Russian and English answered from one shared model, not two. Both languages are represented in the held-out set above |
 
 ## Benchmarks
 
 | Metric | v1.0 | **v1.1** |
 |:-------|:-----|:---------|
 | Shared Neurons | 12,100+ | **12,651** |
-| Trained Experts | 10,800+ | **10,800+** |
-| Test accuracy | 100% (30/30) | **100% (111/111)** |
+| Trained Experts | 10,800+ | **12,085** |
+| Test accuracy | 100% (30/30) — see note | **78% (38/49 held-out)** |
 | Topics covered | 15 | **43** |
-| Inference latency | 18-27ms | **18-27ms** |
+| Inference latency | 18-27ms — wrong, see note | **276 ms median / 340 ms p95** |
 | Learning speed | 130-550ms | **130ms** per fact |
 | Zero forgetting (cosine) | 1.000000 | **1.000000** |
+| Model load time | — | **126 s (3.6 GB state)** |
 | Neuron splitting | ✗ | **✓ (auto)** |
 | Dialogue context | ✗ | **✓** |
 | Command substitution | ✗ | **✓** |
 | RAM usage | 3.5GB | **3.64 GB** |
 | GPU required | No | **No** |
 
-### Test Results v1.1 — 111/111 across 43 topics
+### How the benchmark works, and why the old number is gone
+
+An earlier version of this README claimed 100% — first on 30 queries, then on 111.
+Both sets were written by picking questions out of the training data, and graded by
+reading the answers. The generator has an exact-match fast path
+(`genesis2_gen.py`, the `exact_match_eids` branch): a query that matches a stored
+one character for character returns the stored string and the cascade never runs.
+Ten of those original thirty took that path. They were lookups counted as inference.
+
+`benchmark_honest.py` fixes both problems. It loads every question the model was
+trained on, flags any test query that appears verbatim, excludes those from the
+score, and grades mechanically — each query declares which tool a correct answer
+must name, and no human gets a vote afterwards.
 
 ```
-networking RU/EN  ✅✅✅✅✅✅✅✅✅✅✅  (11/11)
-linux RU/EN       ✅✅✅✅✅✅✅✅✅✅✅  (11/11)
-security RU/EN    ✅✅✅✅✅✅✅✅✅  (9/9)
-vpn RU/EN         ✅✅✅✅✅  (5/5)
-docker/k8s RU/EN  ✅✅✅✅✅✅✅✅  (8/8)
-cisco RU/EN       ✅✅✅✅✅  (5/5)
-dns/dhcp RU/EN    ✅✅✅✅✅✅  (6/6)
-monitoring RU/EN  ✅✅✅✅✅  (5/5)
-databases         ✅✅✅✅  (4/4)
-nginx/web         ✅✅✅✅✅  (5/5)
-windows           ✅✅  (2/2)
-mikrotik          ✅✅  (2/2)
-voip/sip          ✅✅  (2/2)
-scada/iot         ✅✅  (2/2)
-backup            ✅✅  (2/2)
-devops            ✅✅✅✅  (4/4)
-troubleshooting   ✅✅✅✅  (4/4)
-cloud/virt        ✅✅✅  (3/3)
-macos             ✅✅✅  (3/3)
-traffic           ✅✅✅  (3/3)
-greetings/typos   ✅✅✅✅✅✅✅  (7/7)
-slang/infra       ✅✅✅✅  (4/4)
-                           ───────
-TOTAL:            ✅ 111/111 = 100%
+$ python3 benchmark_honest.py
+
+queries                  : 49
+verbatim in training data: 0    (excluded — these are lookups)
+answered via cascade     : 49
+correct tool chosen      : 38/49 = 78%
+latency median / p95     : 276ms / 340ms
+model load               : 126s, CPU only, no GPU
 ```
+
+The eleven failures are printed in full, with what was asked and what came back.
+They cluster into one pattern — the cascade reaches the right topic and picks the
+wrong expert off it ("free space on the root partition" returns disk *cleanup*;
+"scan a subnet" returns `arp -an`). That is a routing-discrimination problem, and
+it is more useful to know than a score of 100%.
 
 ## Architecture
 
@@ -169,7 +173,7 @@ Traditional MoE uses a trained router to pick experts. Genesis 2 uses a reverse 
 To learn a new fact: freeze all shared neurons, create a new expert with a micro-head. Takes **130-550ms**. The new knowledge never interferes with existing knowledge.
 
 ### 5. Zero Catastrophic Forgetting
-Each expert has its own micro-head (output layer). New experts can't modify existing ones. **Mathematically guaranteed** — cosine similarity = 1.000000 before/after learning.
+Each expert has its own micro-head (output layer). New experts can't modify existing ones. Guaranteed **by construction**, not by training: a new expert cannot write to an existing expert's output layer. Measured cosine similarity before/after learning = 1.000000.
 
 ### 6. Hash Neuron Embedding
 Custom embedding system with 9,761 tokens across 72 types. No dependency on external models (MiniLM, BERT, etc.). Fully self-contained.
@@ -187,7 +191,7 @@ Input → Hash Embedding (512d) → ANN Search → Seed Experts
 
 ## Knowledge Domains (35)
 
-> The model is fully bilingual (RU + EN). Trained on 35 domains with 100% accuracy in both languages. Genesis 2 learns new facts in **130ms** — you can train your own model on any language and any domain in minutes, not days.
+> The model is fully bilingual (RU + EN). Trained on 35 domains in both languages; measured accuracy on held-out queries is 78% (see Benchmarks). Genesis 2 learns new facts in **130ms** — you can train your own model on any language and any domain in minutes, not days.
 
 <table>
 <tr><td>Networking (Cisco, MikroTik)</td><td>Linux Administration</td><td>Docker & Kubernetes</td></tr>
